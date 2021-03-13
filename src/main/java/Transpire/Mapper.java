@@ -3,13 +3,13 @@ package Transpire;
 import java.util.*;
 import org.json.simple.*;
 
-public class Mapping {
+public class Mapper {
 	
 	String mappingName;
 	
 	Map<String,String> mapping = new HashMap<>();
 
-	public Mapping(JSONObject translationStructure){	
+	public Mapper(JSONObject translationStructure){	
 		this.mappingName = (String)(translationStructure.get("mapping_name"));
 		
 		for (Object mapObj: (JSONArray)translationStructure.get("translations")){
@@ -18,7 +18,7 @@ public class Mapping {
 		}
 	}
 
-	public String getMapping(String sLang){
+	public String translate(String sLang){
 		return mapping.get(sLang);
 	}
 

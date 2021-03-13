@@ -17,7 +17,7 @@ public class Translations {
 	private String lastUdated;
 	private String pLang;
 	private String maxSupportedVersion;
-	private Mapping mapping;
+	private Mapper mapper;
 
 	public Translations(String sLang, String pLang, String rootPath) throws NotSupportedLanguage{
 		this(sLang,pLang,rootPath,"master");
@@ -61,12 +61,12 @@ public class Translations {
 			for(Object mapping: (JSONArray)translationJSON.get("mappings")){
 				JSONObject mappingStructure = (JSONObject) mapping;
 				if(((String)mappingStructure.get("mapping_name")).equals(version)){
-					this.mapping = new Mapping(mappingStructure);
+					this.mapper= new Mapper(mappingStructure);
 					break;
 				}
 			}
 
-			System.out.println(this.mapping);
+			System.out.println(this.mapper);
 		}catch(Exception e){
 			throw new NotSupportedLanguage("Sorry, the mapping file is corrupt. Please download again ");
 		}
@@ -84,7 +84,7 @@ public class Translations {
 	// 	}
 	// }
 
-	public Mapping getMapping(){
-		return this.mapping;
+	public Mapper getMapper(){
+		return this.mapper;
 	}
 }
