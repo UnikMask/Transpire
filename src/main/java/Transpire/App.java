@@ -3,10 +3,76 @@
  */
 package Transpire;
 
+import java.io.File;
+import java.util.List;
+
+import net.sourceforge.argparse4j.inf.Namespace;
+
 public class App {
     public String getGreeting() {
         return "Suck ma balls";
     }
+
+
+
+	// App arguments - stored here for now
+	static Prompt promptInstance = new Prompt();
+	List<File> sourceFiles;
+	String sourceLanguage;
+	String targetLanguage;
+
+
+	// Get files to translate in the program.
+	public List<File> getFilesToTranslate(Namespace resn) {
+		List<File> resFiles = (List<File>) resn.get("files");
+		return resFiles;
+	}
+
+
+	// Get source language to translate from.
+	public String getSourceLanguage(Namespace resn) {
+			String resFiles = (String) resn.get("source language");
+			return resFiles;
+	}
+
+
+	// Get target language to translate to.
+	public String getTargetLanguage(Namespace resn) {
+		String resFiles = (String) resn.get("target language");
+		return resFiles;
+	}
+
+
+	/**
+	 * Get application wanted variables based on given arguments.
+	 * @param args The app arguments.
+	 * @return Whether the program is true or false.
+	 */
+	public boolean getArgsInApp(String[] args) {
+		Namespace resn = promptInstance.launchPrompt(args);
+		if (resn != null) {
+			sourceFiles =
+				this.getFilesToTranslate(resn);
+			sourceLanguage =
+				this.getSourceLanguage(resn);
+			targetLanguage =
+				this.getTargetLanguage(resn);
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+
+
+	/**
+	 * Constructor for app.
+	 * @param args The application parameters.
+	 */
+	public App(String[] args) {
+		getArgsInApp(args);
+	}
+
 
     public static void main(String[] args) {
         if (args.length < 3 || args.length > 6) {
@@ -15,5 +81,7 @@ public class App {
         //Base: translang Bonjour.java fr
         //Backend: translang Bonjour.java -s fr -t en
         // --help
+
+		App mainInstance = new App(args);
     }
 }
