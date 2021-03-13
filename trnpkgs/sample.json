@@ -1,0 +1,27 @@
+{
+	"language_name" : "french",
+	"code": "fr",
+	"current_version": "0.0.1",
+	"last_updated" : "2021/03/13",
+	"programming_language": "python",
+	"max_supported_version" : "3.8",
+	"mappings": [
+		{
+			"mapping_name": "master",
+			"translations":[
+				{
+					"token" : "if",
+					"translation" : "si"
+				},
+				{
+					"token" : "else",
+					"translation" : "sinon"
+				},
+				{
+					"token" : "elif", 
+					"translation" : "ousi"
+				}
+			]
+		}
+	] 
+}
