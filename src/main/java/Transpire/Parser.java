@@ -1,10 +1,5 @@
 package Transpire;
 
-import org.json.*;
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-
 public class Parser {
     String progLang;
     String countryCode;
