@@ -15,5 +15,10 @@ public class App {
         //Base: translang Bonjour.java fr
         //Backend: translang Bonjour.java -s fr -t en
         // --help
+        try{
+            Translations translation = new Translations("fr","trnpkgs");
+        }catch(Exception e){
+            System.out.println("IGNORE");
+        }
     }
 }
