@@ -50,44 +50,19 @@ public class Parser {
 
         for (int i = 0; i < tokens.size(); i++) {
             if(mapper.checkIfKeyword(tokens.get(i).trim())){
-                String replace = "";
-                for(int j = 0; j < tokens.get(i).length(); j++){
-                    if(tokens.get(i).charAt(j) == '\n'){
-                        replace = replace + '\n';
-                    }
-                    if(tokens.get(i).charAt(j) == '\t'){
-                        replace = replace + '\t';
-                    }
-                }
+                String replace = returnTabsAndSpaces(tokens, i);
                 tokens.set(i, replace + mapper.translate(tokens.get(i).trim()));
             }
 
             if(i < tokens.size()-1 && tokens.get(i + 1).equals("=")) {
-                String replace = "";
-                for(int j = 0; j < tokens.get(i).length(); j++){
-                    if(tokens.get(i).charAt(j) == '\n'){
-                        replace = replace + '\n';
-                    }
-                    if(tokens.get(i).charAt(j) == '\t'){
-                        replace = replace + '\t';
-                    }
-                }
+                String replace = returnTabsAndSpaces(tokens, i);
                 String newName = generateVarName();
                 variableMap . put(tokens.get(i), newName);
                 tokens.set(i, replace + newName);
             }
 
             if(variableMap.get(tokens.get(i).trim()) != null) {
-                String replace = "";
-                for(int j = 0; j < tokens.get(i).length(); j++){
-                    if(tokens.get(i).charAt(j) == '\n'){
-                        replace = replace + '\n';
-                    }
-                    if(tokens.get(i).charAt(j) == '\t'){
-                        replace = replace + '\t';
-                    }
-                }
-
+                String replace = returnTabsAndSpaces(tokens, i);
                 tokens.set(i, replace + variableMap.get(tokens.get(i).trim()));
             }
 
@@ -105,6 +80,19 @@ public class Parser {
         }
 
         return result;
+    }
+
+    private String returnTabsAndSpaces(List<String> tokens, int i) {
+        String replace = "";
+        for(int j = 0; j < tokens.get(i).length(); j++){
+            if(tokens.get(i).charAt(j) == '\n'){
+                replace = replace + '\n';
+            }
+            if(tokens.get(i).charAt(j) == '\t'){
+                replace = replace + '\t';
+            }
+        }
+        return replace;
     }
 
     private int varCount = 0;
