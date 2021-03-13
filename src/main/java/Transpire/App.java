@@ -76,12 +76,18 @@ public class App {
 
     public static void main(String[] args) {
         if (args.length < 3 || args.length > 6) {
-            System.out.println("Print you sexy bastard.");
+            // System.out.println("Print you sexy bastard.");
         }
         //Base: translang Bonjour.java fr
         //Backend: translang Bonjour.java -s fr -t en
         // --help
 
 		App mainInstance = new App(args);
+        Translations translations;
+        try{
+            translations = new Translations("fr","python","trnpkgs");
+        }catch(NotSupportedLanguage e){
+            System.out.println(e.getMessage());
+        }
     }
 }
