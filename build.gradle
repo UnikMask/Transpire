@@ -39,6 +39,20 @@ application {
     // Define the main class for the application.
     mainClassName = 'Transpire.App'
 }
+version = '1.0'
+
+//create a single Jar with all dependencies
+task fatJar(type: Jar) {
+    manifest {
+        attributes 'Implementation-Title': 'Transpire jar executable',
+        	'Implementation-Version': version,
+        	'Main-Class': mainClassName
+    }
+    baseName = project.name + '-all'
+    from { configurations.compile.collect {
+		it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
 
 test {
     // Use junit platform for unit tests

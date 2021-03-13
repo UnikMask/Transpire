@@ -1,0 +1,6 @@
+#!/usr/bin/env sh
+# Stackhack Infidels - Transpire
+# This file is part of the Transpire hackathon project
+
+gradle fatJar > /dev/null
+java -jar build/libs/Transpire-all-1.0.jar "$@"

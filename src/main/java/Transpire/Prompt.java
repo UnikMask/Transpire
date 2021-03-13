@@ -32,10 +32,10 @@ public class Prompt
 			.type(String.class)
 			.choices("en", "fr")
 			.help("The source file natural language.");
-		parserEng.addArgument("--target")
+		parserEng.addArgument("--target", "-t")
 			.dest("target language")
 			.type(String.class)
-			.choices("en", "fr")
+			.choices("en")
 			.setDefault("en")
 			.help("The spoken language to translate the file to.");
 

@@ -20,6 +20,7 @@ public class App {
 	List<File> sourceFiles;
 	String sourceLanguage;
 	String targetLanguage;
+	boolean appFlag = true;
 
 
 	// Get files to translate in the program.
@@ -70,7 +71,7 @@ public class App {
 	 * @param args The application parameters.
 	 */
 	public App(String[] args) {
-		getArgsInApp(args);
+		appFlag = getArgsInApp(args);
 	}
 
 
@@ -83,11 +84,15 @@ public class App {
         // --help
 
 		App mainInstance = new App(args);
-        Translations translations;
-        try{
-            translations = new Translations("fr","python","trnpkgs");
-        }catch(NotSupportedLanguage e){
-            System.out.println(e.getMessage());
-        }
+		if (mainInstance.appFlag) {
+			Translations translations;
+			try{
+				translations = new Translations("fr","python","trnpkgs");
+				Mapper mapper = translations.getMapper();
+				System.out.println(mapper.translate("si"));
+			}catch(NotSupportedLanguage e){
+				System.out.println(e.getMessage());
+			}
+		}
     }
 }
