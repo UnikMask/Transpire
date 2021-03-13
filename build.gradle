@@ -51,9 +51,12 @@ version = '1.0'
 import org.ajoberstar.grgit.Grgit
 
 build.doLast {
-    def grgit = Grgit.clone(dir: 'trnpkgs', uri: 'https://www.github.com/UnikMask/trnpkgs')
+    def trnDir = new File( 'trnpkgs' )
+    if ( !trnDir.exists(  )) {
+        def grgit = Grgit.clone(dir: 'trnpkgs', uri: 'https://www.github.com/UnikMask/trnpkgs')
+    }
 }
-clean.doLast {
+clean.doFirst {
     delete "trnpkgs"
 }
 
