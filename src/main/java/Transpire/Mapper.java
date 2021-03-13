@@ -22,6 +22,10 @@ public class Mapper {
 		return mapping.get(sLang);
 	}
 
+	public boolean checkIfKeyword(String sLang) {
+		return mapping.get(sLang) != null;
+	}
+
 	@Override
 	public String toString(){
 		return mappingName;

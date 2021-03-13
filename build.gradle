@@ -27,6 +27,7 @@ dependencies {
 	implementation 'net.sourceforge.argparse4j:argparse4j:0.8.1'
     implementation 'com.googlecode.json-simple:json-simple:1.1.1'
     implementation 'org.json:json:20210307'
+    implementation group: 'org.python', name: 'jython-standalone', version: '2.7.2'
 
     // Use JUnit Jupiter API for testing.
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.2'

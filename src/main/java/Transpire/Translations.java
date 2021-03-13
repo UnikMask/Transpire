@@ -42,10 +42,10 @@ public class Translations {
 			}
 		}
 		if(!foundSLang){
-			throw new NotSupportedLanguage("Sorry the spoken human langauge is not supported. 🙇‍♂️");
+			throw new NotSupportedLanguage("Sorry the spoken human language is not supported.");
 		}
 		if(!foundPLang){
-			throw new NotSupportedLanguage("Sorry the written programming language is not supported. 😬");
+			throw new NotSupportedLanguage("Sorry the written programming language is not supported.");
 		}
 
 		JSONParser parser = new JSONParser();
