@@ -1,6 +1,6 @@
 package Transpire;
 
-public class prompt 
+public class Prompt
 {
     
 }
