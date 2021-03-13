@@ -76,11 +76,8 @@ public class App {
 
 
     public static void main(String[] args) {
-        if (args.length < 3 || args.length > 6) {
-            // System.out.println("Print you sexy bastard.");
-        }
-        //Base: translang Bonjour.java fr
-        //Backend: translang Bonjour.java -s fr -t en
+        //Base: transpire Bonjour.java fr
+        //Backend: transpire Bonjour.java -s fr -t en
         // --help
 
 		App mainInstance = new App(args);

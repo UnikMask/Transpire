@@ -24,10 +24,10 @@ repositories {
 dependencies {
     // This dependency is used by the application.
     implementation 'com.google.guava:guava:29.0-jre'
-	implementation 'net.sourceforge.argparse4j:argparse4j:0.8.1'
-    implementation 'com.googlecode.json-simple:json-simple:1.1.1'
-    implementation 'org.json:json:20210307'
-    implementation group: 'org.python', name: 'jython-standalone', version: '2.7.2'
+	compile 'net.sourceforge.argparse4j:argparse4j:0.8.1'
+    compile 'com.googlecode.json-simple:json-simple:1.1.1'
+    compile 'org.json:json:20210307'
+    compile group: 'org.python', name: 'jython-standalone', version: '2.7.2'
 
     // Use JUnit Jupiter API for testing.
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.2'
