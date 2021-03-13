@@ -1,9 +1,8 @@
 {
-	"language_name" : "french",
+	"sLang" : "french",
 	"code": "fr",
-	"current_version": "0.0.1",
 	"last_updated" : "2021/03/13",
-	"programming_language": "python",
+	"pLang": "python",
 	"max_supported_version" : "3.8",
 	"mappings": [
 		{
