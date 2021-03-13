@@ -3,6 +3,8 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.python.core.PyObject;
+import org.python.core.PyString;
 import org.python.util.PythonInterpreter;
 
 
@@ -42,7 +44,8 @@ public class Parser {
 
         interpreter.exec("import re");
         interpreter.set("file", input );
-        interpreter.execfile("src/main/java/Transpire/Regex.py");
+        interpreter.set("regex", "r'(\\|{2}|&{2}|\\*{2}|!=|={2}|>=|;|:|\\{|}|\\+|-|\\*|/|\\[|\\]|>|<|=|\\(|\\)|\\.)'");
+        interpreter.set("contents", interpreter.eval("re.sub(regex, ' \\g<0> ', file)"));
         String toTokenize = interpreter.get("contents", String.class);
         List<String> tokens = new ArrayList<String>(Arrays.asList(toTokenize.split(" ")));
 
