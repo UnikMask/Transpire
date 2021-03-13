@@ -5,7 +5,7 @@ package Transpire;
 
 public class App {
     public String getGreeting() {
-        return "Hello world.";
+        return "Suck ma balls";
     }
 
     public static void main(String[] args) {
