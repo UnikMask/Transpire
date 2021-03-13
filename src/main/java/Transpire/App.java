@@ -9,6 +9,11 @@ public class App {
     }
 
     public static void main(String[] args) {
-        System.out.println(new App().getGreeting());
+        if (args.length < 3 || args.length > 6) {
+            System.exit(1);
+        }
+        //Base: translang Bonjour.java fr
+        //Backend: translang Bonjour.java -s fr -t en
+        // --help
     }
 }
