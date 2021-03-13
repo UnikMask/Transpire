@@ -88,6 +88,8 @@ public class App {
 			Translations translations;
 			try{
 				translations = new Translations("fr","python","trnpkgs");
+				Mapper mapper = translations.getMapper();
+				System.out.println(mapper.translate("si"));
 			}catch(NotSupportedLanguage e){
 				System.out.println(e.getMessage());
 			}
