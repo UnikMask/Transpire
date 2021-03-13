@@ -17,7 +17,7 @@ public class App {
         // --help
         Translations translations;
         try{
-            translations = new Translations("jp","trnpkgs");
+            translations = new Translations("jp","python","trnpkgs");
         }catch(NotSupportedLanguage e){
             System.out.println("Not supported. Soweee. ");
         }
