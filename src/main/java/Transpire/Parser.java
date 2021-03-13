@@ -107,12 +107,10 @@ public class Parser {
         return result;
     }
 
-    public boolean checkIfKeyword(String word){
-        return false;
-    }
+    private int varCount = 0;
 
-    public String returnKeyword(String word){
-        return "";
+    public String generateVarName() {
+        varCount++;
+        return "var" + varCount;
     }
-
 }
