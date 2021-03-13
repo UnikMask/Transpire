@@ -7,11 +7,24 @@ import java.util.*;
 import java.util.Scanner;
 
 import org.json.simple.JSONObject;
+import org.json.simple.JSONArray;
 import org.json.simple.parser.*;
 
-public class Translations {	
+public class Translations {
 	
+	private String sLang;
+	private String code;
+	private String lastUdated;
+	private String pLang;
+	private String maxSupportedVersion;
+	private Mapping mapping;
+
 	public Translations(String sLang, String pLang, String rootPath) throws NotSupportedLanguage{
+		this(sLang,pLang,rootPath,"master");
+	}
+
+	
+	public Translations(String sLang, String pLang, String rootPath,String version) throws NotSupportedLanguage{
 		File rootFolder = new File(rootPath);
 
 		boolean foundSLang = false;
@@ -39,10 +52,23 @@ public class Translations {
 
 		try{
 			Object obj = parser.parse(new FileReader(loadFile.getPath()));
-			JSONObject jsonObject = (JSONObject) obj;
+			JSONObject translationJSON = (JSONObject) obj;
+			System.out.println(translationJSON);
+
 			System.out.println("Parsing successful!");
+
+
+			for(Object mapping: (JSONArray)translationJSON.get("mappings")){
+				JSONObject mappingStructure = (JSONObject) mapping;
+				if(((String)mappingStructure.get("mapping_name")).equals(version)){
+					this.mapping = new Mapping(mappingStructure);
+					break;
+				}
+			}
+
+			System.out.println(this.mapping);
 		}catch(Exception e){
-			//
+			throw new NotSupportedLanguage("Sorry, the mapping file is corrupt. Please download again ");
 		}
 
 		// InputStream inputStream = ReadJsonArra
