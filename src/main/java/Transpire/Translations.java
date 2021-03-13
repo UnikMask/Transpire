@@ -21,11 +21,7 @@ public class Translations {
 			if(sLangFolder.getName().equals(sLang)){
 				foundSLang = true;
 				for(File pLangFile: Arrays.asList(sLangFolder.listFiles())){
-					System.out.println(pLangFile);
-					// System.out.println( printList(Arrays.asList(pLangFile.getName().split("/"))));
-					// System.out.println(printList(Arrays.asList(pLangFile.getName().split("/"))));
-					System.out.println(pLangFile.getName().split("/")[0]);
-					if(pLangFile.getName().split("/")[2].replace(".json","").equals(pLang)){
+					if(pLangFile.getName().split("/")[0].replace(".json","").equals(pLang)){
 						foundPLang = true;
 						loadFile = pLangFile;
 					}
