@@ -8,6 +8,7 @@ import net.sourceforge.argparse4j.inf.ArgumentParserException;
 import net.sourceforge.argparse4j.inf.Namespace;
 
 
+
 public class Prompt
 {
 	public Namespace launchPrompt(String[] args) {
@@ -35,6 +36,7 @@ public class Prompt
 			.dest("target language")
 			.type(String.class)
 			.choices("en", "fr")
+			.setDefault("en")
 			.help("The spoken language to translate the file to.");
 
 		try {
