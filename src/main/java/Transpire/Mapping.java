@@ -18,6 +18,10 @@ public class Mapping {
 		}
 	}
 
+	public String getMapping(String sLang){
+		return mapping.get(sLang);
+	}
+
 	@Override
 	public String toString(){
 		return mappingName;

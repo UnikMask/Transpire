@@ -76,11 +76,15 @@ public class Translations {
 	}
 
 
-	public String getMapping(String languageToken){
-		if(languageToken.equals("sinon")){
-			return "else";
-		}else{
-			return "if";
-		}
+	// public String getMapping(String languageToken){
+	// 	if(languageToken.equals("sinon")){
+	// 		return "else";
+	// 	}else{
+	// 		return "if";
+	// 	}
+	// }
+
+	public Mapping getMapping(){
+		return this.mapping;
 	}
 }
