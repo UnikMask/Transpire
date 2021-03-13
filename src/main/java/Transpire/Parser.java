@@ -1,23 +1,17 @@
 package Transpire;
 
+import org.json.*;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+
 public class Parser {
     String progLang;
     String countryCode;
-    JSONTokener tokener;
-    JSONObject json;
-    BufferedReader reader;
 
     public Parser(String countryCode, String progLang) {
         this.progLang = progLang;
         this.countryCode = countryCode;
-        try {
-            this.reader = new BufferedReader(new FileReader( "trnpkgs" + countryCode + "/" + progLang + ".json"));
-        } catch (FileNotFoundException e){
-            System.err.println("This language has not been implemented yet.");
-        }
-        this.tokener = new JSONTokener(this.reader);
-        this.json = new JSONObject(this.tokener);
-        System.out.println("Id  : " + this.json.getLong("id"));
     }
 
     /**
@@ -33,7 +27,6 @@ public class Parser {
     }
 
     public boolean checkIfKeyword(String word){
-
         return false;
     }
     
