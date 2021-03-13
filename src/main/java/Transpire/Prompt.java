@@ -4,11 +4,13 @@ import java.io.File;
 
 import net.sourceforge.argparse4j.ArgumentParsers;
 import net.sourceforge.argparse4j.inf.ArgumentParser;
+import net.sourceforge.argparse4j.inf.ArgumentParserException;
+import net.sourceforge.argparse4j.inf.Namespace;
 
 
 public class Prompt
 {
-	public int launchPrompt(String[] args) {
+	public Namespace launchPrompt(String[] args) {
 		ArgumentParser parserEng = ArgumentParsers.newFor("transpire").build()
 			.description("Translates program written in native language to "
 						 + "compilable code.");
@@ -34,6 +36,14 @@ public class Prompt
 			.type(String.class)
 			.choices("en", "fr")
 			.help("The spoken language to translate the file to.");
-		return 0;
+
+		try {
+			Namespace resn = parserEng.parseArgs(args);
+			return resn;
+		}
+		catch (ArgumentParserException e) {
+			parserEng.handleError(e);
+			return null;
+		}
 	}
 }
