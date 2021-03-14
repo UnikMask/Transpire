@@ -144,6 +144,13 @@ gradle run --args="sampleFile.java -u --lang java --source jp --target en"
 
 Gradle automatically runs the transpire app with the arguments stated inside --args. The above example will take the the java file (`--lang java`) called sampleFile.java, read it as japanese (`--source jp`), and map it to the standard java syntax (`--target en`) using the respective json. The `-u` argument always fetches the most up-to-date translation and caches it into local machine. If you do not have internet connection, drop the `-u`.
 
+One can also run it using the `transpire` binary
+
+``` bash
+./transpire sampleFile.java -u --lang java --source jp --target en
+```
+
+`
 
 
 
