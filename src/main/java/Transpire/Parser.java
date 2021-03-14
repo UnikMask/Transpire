@@ -91,18 +91,18 @@ public class Parser {
             }
         }
 
-        String result = "";
+        StringBuilder result = new StringBuilder();
         for (String token : tokens) {
-            if (!result.equals("") && result.charAt(result.length() - 1) == '\n') {
-                result = result + token;
-            } else if (result.equals("")){
-                result = token;
+            if (!result.toString().equals("") && result.charAt(result.length() - 1) == '\n') {
+                result.append(token);
+            } else if (result.toString().equals("")){
+                result = new StringBuilder(token);
             } else {
-                result = result + " " + token;
+                result.append(" ").append(token);
             }
         }
 
-        return result;
+        return result.toString();
     }
 
     private String replaceQuotes(String input) {
@@ -148,16 +148,16 @@ public class Parser {
     }
 
     private String returnTabsAndSpaces(List<String> tokens, int i) {
-        String replace = "";
+        StringBuilder replace = new StringBuilder();
         for(int j = 0; j < tokens.get(i).length(); j++){
             if(tokens.get(i).charAt(j) == '\n'){
-                replace = replace + '\n';
+                replace.append('\n');
             }
             if(tokens.get(i).charAt(j) == '\t'){
-                replace = replace + '\t';
+                replace.append('\t');
             }
         }
-        return replace;
+        return replace.toString();
     }
 
     public String removeComments(String input, String regex) throws IOException{

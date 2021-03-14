@@ -1,7 +1,5 @@
 package Transpire;
 
-import java.io.File;
-
 import net.sourceforge.argparse4j.ArgumentParsers;
 import net.sourceforge.argparse4j.impl.Arguments;
 import net.sourceforge.argparse4j.inf.ArgumentParser;
@@ -48,8 +46,7 @@ public class Prompt
 			.help("Whether to update the JSON if already downloaded.");
 
 		try {
-			Namespace resn = parserEng.parseArgs(args);
-			return resn;
+			return parserEng.parseArgs(args);
 		}
 		catch (ArgumentParserException e) {
 			parserEng.handleError(e);
