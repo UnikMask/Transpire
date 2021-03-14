@@ -146,9 +146,8 @@ public class App {
 				}
 			}catch(NotSupportedLanguage e){
 				System.out.println(e.getMessage());
-			}
-			catch (IOException e) {
-				System.out.println(e.getMessage());
+			}catch(IOException e) {
+				System.out.println("Couldn't open file.");
 			}
 		}
     }
