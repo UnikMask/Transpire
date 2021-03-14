@@ -45,8 +45,9 @@ public class Parser {
         input = input.replaceAll("\n", "\n ");
 
         Reader baseReader = new StringReader(input);
+        String regex = "(\\|{2}|&{2}|\\*{2}|!=|\\+{2}|\\-{2}|={2}|>=|;|:|\\{|}|\\+|-|\\*|/|\\[|\\]|>|<|=|\\(|\\)|\\.)";
 
-        Modifier modifier = new RegexModifier("(\\|{2}|&{2}|\\*{2}|!=|={2}|>=|;|:|\\{|}|\\+|-|\\*|/|\\[|\\]|>|<|=|\\(|\\)|\\.)", Pattern.MULTILINE, new SpaceSeparator(), 0 ,2048);
+        Modifier modifier = new RegexModifier(regex, Pattern.MULTILINE, new SpaceSeparator(), 0 ,2048);
         Reader modifyingReader = new ModifyingReader(baseReader, modifier);
 
         String toTokenize = IOUtils.toString(modifyingReader);
