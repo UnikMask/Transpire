@@ -14,6 +14,9 @@ public class Parser {
     String countryCode;
     Translations translator;
     Mapper mapper;
+    Map<String, String> quoteMap = new HashMap<>();
+    String commentRegexes;
+
 
     public Parser(String countryCode, String progLang) throws NotSupportedLanguage {
         this.progLang = progLang;
@@ -21,6 +24,7 @@ public class Parser {
         try {
             this.translator = new Translations(this.countryCode, this.progLang, "trnpkgs");
             this.mapper = this.translator.getMapper();
+            this.commentRegexes = this.mapper.getCommentRegex();
         } catch (NotSupportedLanguage e){
             throw new NotSupportedLanguage("Unsupported Language");
         }
@@ -50,13 +54,18 @@ public class Parser {
         input = input.replaceAll("\n", "\n ");
 
         Reader baseReader = new StringReader(input);
-        String regex = "(\\|{2}|&{2}|\\*{2}|!=|\\+{2}|\\-{2}|={2}|>=|;|:|\\{|}|\\+|-|\\*|/|\\[|\\]|>|<|=|\\(|\\)|\\.)";
+        //String regex = ("(\\|{2}|&{2}|\\*{2}|!=|->|:{2}|\\-{2}|={2}|>=|;|:|\\{|}\\+|-|\\*|/|\\[|\\]|>|<|=|\\(|\\)|\\.|,|&
+        String regex = "(\\/{2}=|" + "\\*{2}=|" + "\\>{2}=|" + "\\<{2}=|" + "\\|{2}|" + "&{2}|" + "\\*{2}|" + "!=|"+
+                "->|" + ":{2}|" + "\\+{2}|" + "\\-{2}|" + "={2}|" + ">=|" + "<=|" + "\\+=|" + "\\-=|" + "\\*=|" + "\\/=|" + "\\%=|" +
+                "&=|" + "\\|=|" + "\\^=|" + "\\>{2}|" + "\\<{2}|" + ";|" + ":|" + "\\{|" + "\\}|" + "\\+|" + "\\-|" + "\\*|" + "\\/|" + "\\[|" + "\\]|" + ">|" + "<|" +
+                "=|" + "\\(|" + "\\)|" + "\\.|" + ",|" + "&|" + "\\||" + "%|" + "^|" + "~" + ")";
+
 
         Modifier modifier = new RegexModifier(regex, Pattern.MULTILINE, new SpaceSeparator(), 0 ,2048);
         Reader modifyingReader = new ModifyingReader(baseReader, modifier);
 
         String toTokenize = IOUtils.toString(modifyingReader);
-        List<String> tokens = new ArrayList<String>(Arrays.asList(toTokenize.split(" ")));
+        List<String> tokens = new ArrayList<>(Arrays.asList(toTokenize.split(" ")));
 
         tokens.removeAll(Collections.singletonList(""));
 
@@ -78,6 +87,9 @@ public class Parser {
                 tokens.set(i, replace + variableMap.get(tokens.get(i).trim()));
             }
 
+            if(this.quoteMap.get(tokens.get(i).trim()) != null) {
+                tokens.set(i, this.quoteMap.get(tokens.get(i).trim()));
+            }
         }
 
         String result = "";
@@ -149,7 +161,12 @@ public class Parser {
         return replace;
     }
 
-    private int varCount = 0;
+    public String removeComments(String input, String regex) throws IOException{
+        Reader commentReader = new StringReader(input);
+        Modifier modifier = new RegexModifier(regex, Pattern.MULTILINE , new CommentSeparator(), 0 ,2048);
+        ModifyingReader modifyingReader = new ModifyingReader(commentReader, modifier);
+        return IOUtils.toString(modifyingReader);
+    }
 
     public String generateVarName() {
         return "var" + System.nanoTime();
