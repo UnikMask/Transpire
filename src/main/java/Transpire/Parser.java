@@ -1,12 +1,14 @@
 package Transpire;
 import java.io.*;
 import java.util.*;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.github.rwitzel.streamflyer.core.Modifier;
 import com.github.rwitzel.streamflyer.core.ModifyingReader;
 import org.apache.commons.io.IOUtils;
 import com.github.rwitzel.streamflyer.regex.RegexModifier;
+import org.apache.commons.lang3.StringUtils;
 
 
 public class Parser {
@@ -14,7 +16,7 @@ public class Parser {
     String countryCode;
     Translations translator;
     Mapper mapper;
-    Map<String, String> quoteMap = new HashMap<>();
+    Map<String, String> uniqueMap = new HashMap<>();
     String commentRegexes;
 
 
@@ -40,13 +42,20 @@ public class Parser {
      * @return the contents of the file as string with all keywords replaced with english equivalent
      */
     public String parseString(String input) throws IOException {
+        Pattern include = Pattern.compile("#include.*");
+        Matcher matcher = include.matcher(input);
+        while(matcher.find()){
+            String uniqueName = generateUniqueName();
+            uniqueMap.put(uniqueName, input.substring(matcher.start(), matcher.end() + 1));
+            input = input.replace(input.substring(matcher.start(), matcher.end() + 1), uniqueName + "\n");
+        }
+
         String[] commentRegex = this.commentRegexes.split(" ");
         for (String regex: commentRegex) {
             input = removeComments(input, regex);
         }
         input = replaceQuotes(input);
         input = replaceSingleQuotes(input);
-
 
         Map<String, String> variableMap = new HashMap<>();
 
@@ -57,7 +66,7 @@ public class Parser {
         String regex = "(\\/{2}=|" + "\\*{2}=|" + "\\>{2}=|" + "\\<{2}=|" + "\\|{2}|" + "&{2}|" + "\\*{2}|" + "!=|"+
                 "->|" + ":{2}|" + "\\+{2}|" + "\\-{2}|" + "={2}|" + ">=|" + "<=|" + "\\+=|" + "\\-=|" + "\\*=|" + "\\/=|" + "\\%=|" +
                 "&=|" + "\\|=|" + "\\^=|" + "\\>{2}|" + "\\<{2}|" + ";|" + ":|" + "\\{|" + "\\}|" + "\\+|" + "\\-|" + "\\*|" + "\\/|" + "\\[|" + "\\]|" + ">|" + "<|" +
-                "=|" + "\\(|" + "\\)|" + "\\.|" + ",|" + "&|" + "\\||" + "%|" + "\\^|" + "~" + ")";
+                "=|" + "\\(|" + "\\)|" + "\\.|" + ",|" + "&|" + "\\||" + "%|" + "\\^|" + "~|" + "\\?" + ")";
 
 
         Modifier modifier = new RegexModifier(regex, Pattern.MULTILINE, new SpaceSeparator(), 0 ,2048);
@@ -75,22 +84,19 @@ public class Parser {
                 tokens.set(i, replace + mapper.translate(tokens.get(i).trim()));
             }
 
-            if (i < tokens.size() - 1 && tokens.get(i + 1).equals("=")) {
+            if (i < tokens.size() - 1 && tokens.get(i + 1).equals("=") && StringUtils.isAlphanumeric(tokens.get(i))) {
                 String replace = returnTabsAndSpaces(tokens, i);
-                String newName = generateVarName();
-                variableMap.put(tokens.get(i), newName);
+                String newName = generateUniqueName();
+                uniqueMap.put(tokens.get(i), newName);
                 tokens.set(i, replace + newName);
             }
 
-            if (variableMap.get(tokens.get(i).trim()) != null) {
+            if (this.uniqueMap.get(tokens.get(i).trim()) != null) {
                 String replace = returnTabsAndSpaces(tokens, i);
-                tokens.set(i, replace + variableMap.get(tokens.get(i).trim()));
-            }
-
-            if (this.quoteMap.get(tokens.get(i).trim()) != null) {
-                tokens.set(i, this.quoteMap.get(tokens.get(i).trim()));
+                tokens.set(i,replace + this.uniqueMap.get(tokens.get(i).trim()));
             }
         }
+
 
         StringBuilder result = new StringBuilder();
         for (String token : tokens) {
@@ -117,8 +123,8 @@ public class Parser {
 
         while(scanner.hasNext()) {
             String quote = "\"" + scanner.next() + "\"";
-            String quoteName = generateQuoteName();
-            quoteMap.put(quoteName, quote);
+            String quoteName = generateUniqueName();
+            uniqueMap.put(quoteName, quote);
             input = input.replace(quote, quoteName);
             if (scanner.hasNext()) {
                 scanner.next();
@@ -138,8 +144,8 @@ public class Parser {
 
         while(scanner.hasNext()) {
             String quote = "'" + scanner.next() + "'";
-            String quoteName = generateQuoteName();
-            quoteMap.put(quoteName, quote);
+            String quoteName = generateUniqueName();
+            uniqueMap.put(quoteName, quote);
             input = input.replace(quote, quoteName);
             if (scanner.hasNext()) {
                 scanner.next();
@@ -168,11 +174,7 @@ public class Parser {
         return IOUtils.toString(modifyingReader);
     }
 
-    public String generateVarName() {
-        return "var" + System.nanoTime();
-    }
-
-    public String generateQuoteName() {
-        return "quote" + System.nanoTime();
+    public String generateUniqueName() {
+        return "unique" + System.nanoTime();
     }
 }
