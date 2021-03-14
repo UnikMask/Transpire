@@ -122,9 +122,6 @@ public class App {
 
 
     public static void main(String[] args) {
-        //Base: transpire Bonjour.java fr
-        //Backend: transpire Bonjour.java -s fr -t en
-        // --help
 		 App mainInstance = new App(args);
 		 if (mainInstance.appFlag) {
 		 	Parser parser;
