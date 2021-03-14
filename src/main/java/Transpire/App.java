@@ -9,6 +9,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
+import java.util.TreeMap;
 
 import net.sourceforge.argparse4j.inf.Namespace;
 
@@ -133,39 +134,29 @@ public class App {
         //Base: transpire Bonjour.java fr
         //Backend: transpire Bonjour.java -s fr -t en
         // --help
-		try{
-			Translations translations = new Translations("fr", "python");
-			// translations.updateTranslations("fr","python");
-		}catch(Exception e){
-			System.out.println(e.getMessage());
-			System.out.println(e.getStackTrace());
-		}
-		
+		 App mainInstance = new App(args);
+		 if (mainInstance.appFlag) {
+		 	Parser parser;
+		 	try{
+		 		Translations.updateTranslations(mainInstance.sourceLanguage, mainInstance.progLanguage);
+		 		parser = new Parser(mainInstance.sourceLanguage,
+		 							mainInstance.progLanguage);
 
-		// App mainInstance = new App(args);
-		// if (mainInstance.appFlag) {
-		// 	Parser parser;
-		// 	try{
-		// 		parser = new Parser(mainInstance.sourceLanguage,
-		// 							mainInstance.progLanguage);
+		 		// Get String from file
+		 		for (String file: mainInstance.sourceFiles) {
+		 			System.out.println(mainInstance.getFileContent(file));
 
-		// 		// Get String from file
-		// 		for (String file: mainInstance.sourceFiles) {
-		// 			System.out.println(mainInstance.getFileContent(file));
+					if (!mainInstance.writeFile(parser.parseString(mainInstance.getFileContent(file)), file)){
+						System.out.println("Io Exception on file write!");
+						break;
+					}
 
-		// 			if (!mainInstance.writeFile( parser.parseString(
-		// 				mainInstance.getFileContent(file)), file)) {
-		// 				System.out.println("IO Exception on file write!");
-		// 				break;
-		// 			}
-		// 		}
-		// 		Translations translations = new Translations("fr", "python", "translations");
-		// 		translations.updateTranslations("fr","python");
-		// 	}catch(NotSupportedLanguage e){
-		// 		System.out.println(e.getMessage());
-		// 	}catch(IOException e) {
-		// 		System.out.println("Couldn't open file.");
-		// 	}
-		// }
+		 		}
+		 	}catch(NotSupportedLanguage e){
+		 		System.out.println(e.getMessage());
+		 	}catch(IOException e) {
+		 		System.out.println("Couldn't open file.");
+		 	}
+		 }
     }
 }
