@@ -18,11 +18,11 @@ public class Parser {
     String commentRegexes;
 
 
-    public Parser(String countryCode, String progLang) throws NotSupportedLanguage {
+    public Parser(String countryCode, String progLang, String rootPath) throws NotSupportedLanguage {
         this.progLang = progLang;
         this.countryCode = countryCode;
         try {
-            this.translator = new Translations(this.countryCode, this.progLang, "translations");
+            this.translator = new Translations(this.countryCode, this.progLang, rootPath);
             this.mapper = this.translator.getMapper();
             this.commentRegexes = this.translator.getCommentRegex();
         } catch (NotSupportedLanguage e){

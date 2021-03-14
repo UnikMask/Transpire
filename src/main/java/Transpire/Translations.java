@@ -52,12 +52,12 @@ public class Translations {
 
 			File file = new File( configDir + "/" + sLang + "/");
 			if(!file.exists()) file.mkdirs();
-				BufferedWriter writer = new BufferedWriter(new FileWriter("./translations/" + sLang + "/" + pLang + ".json" ));
+				BufferedWriter writer = new BufferedWriter(new FileWriter(configDir + "/" + sLang + "/" + pLang + ".json" ));
 				writer.write(prettyJson);
 				writer.close();
 			}
 
-		} catch(IOException ignored){
+		} catch(IOException ignored) {
 
 		}
 	}
