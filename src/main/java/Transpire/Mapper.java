@@ -14,7 +14,7 @@ public class Mapper {
 		
 		for (Object mapObj: (JSONArray)translationStructure.get("translations")){
 			JSONObject mapJSON = (JSONObject)mapObj;
-			mapping.put((String)(mapJSON.get("translation")),(String)(mapJSON.get("token")));
+			mapping.put((String)(mapJSON.get("token")),(String)(mapJSON.get("translation")));
 		}
 	}
 
