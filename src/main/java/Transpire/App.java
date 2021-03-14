@@ -124,10 +124,12 @@ public class App {
 												mainInstance.progLanguage,
 												mainInstance.updateFlag);
 				parser = new Parser(mainInstance.sourceLanguage,
-									mainInstance.progLanguage);
+									mainInstance.progLanguage,
+									mainInstance.configDir);
 
 				// Get String from file
 				for (String file: mainInstance.sourceFiles) {
+					App.verboseLog(new File(file).getCanonicalPath());
 					String output = parser.parseString(mainInstance.getFileContent(file));
 					if (!mainInstance.writeFile(output, file)){
 						System.out.println("Io Exception on file write!");
