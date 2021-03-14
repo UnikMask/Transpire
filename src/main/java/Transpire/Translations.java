@@ -3,6 +3,9 @@ package Transpire;
 // import org.json.simple.*;
 
 import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.*;
 import java.util.Scanner;
 
@@ -21,6 +24,42 @@ public class Translations {
 
 	public Translations(String sLang, String pLang, String rootPath) throws NotSupportedLanguage{
 		this(sLang,pLang,rootPath,"master");
+	}
+	public Translations(String sLang, String pLang) throws NotSupportedLanguage{
+		updateTranslations(sLang, pLang);
+	}
+
+	public void updateTranslations(String sLang, String pLang) throws NotSupportedLanguage{
+		try{
+			URL url = new URL("http://unikbase.space/translations/" + sLang + "/" + pLang + ".json");
+			System.out.println(url);
+			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+			connection.setRequestMethod("GET");
+
+			connection.setReadTimeout(5000);
+			connection.setConnectTimeout(5000);
+
+			int status = connection.getResponseCode();
+			BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+			String inputLine;
+			StringBuffer content = new StringBuffer();
+			while((inputLine = in.readLine()) != null){
+				content.append(inputLine);
+			}
+			in.close();
+			connection.disconnect();
+			BufferedWriter writer = new BufferedWriter(new FileWriter("./translations/" + sLang + "/" + pLang + ".json" ));
+			writer.write(content.toString());
+			writer.close();
+
+			// System.out.println(content.toString());
+			// System.out.println(status);
+
+		}catch(MalformedURLException e){
+			throw new NotSupportedLanguage("Sowee, the given language is nto currently supported. Maybe you can contribute? 😢");
+		}catch(IOException e){
+			throw new NotSupportedLanguage("No internet connection. Plz pay your bills");
+		}
 	}
 
 	
@@ -53,9 +92,9 @@ public class Translations {
 		try{
 			Object obj = parser.parse(new FileReader(loadFile.getPath()));
 			JSONObject translationJSON = (JSONObject) obj;
-			System.out.println(translationJSON);
+			// System.out.println(translationJSON);
 
-			System.out.println("Parsing successful!");
+			// System.out.println("Parsing successful!");
 
 
 			for(Object mapping: (JSONArray)translationJSON.get("mappings")){

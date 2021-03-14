@@ -126,29 +126,39 @@ public class App {
         //Base: transpire Bonjour.java fr
         //Backend: transpire Bonjour.java -s fr -t en
         // --help
-
-		App mainInstance = new App(args);
-		if (mainInstance.appFlag) {
-			Parser parser;
-			try{
-				parser = new Parser(mainInstance.sourceLanguage,
-									mainInstance.progLanguage);
-
-				// Get String from file
-				for (String file: mainInstance.sourceFiles) {
-					System.out.println(mainInstance.getFileContent(file));
-
-					if (!mainInstance.writeFile( parser.parseString(
-						mainInstance.getFileContent(file)), file)) {
-						System.out.println("IO Exception on file write!");
-						break;
-					}
-				}
-			}catch(NotSupportedLanguage e){
-				System.out.println(e.getMessage());
-			}catch(IOException e) {
-				System.out.println("Couldn't open file.");
-			}
+		try{
+			Translations translations = new Translations("fr", "python");
+			// translations.updateTranslations("fr","python");
+		}catch(Exception e){
+			System.out.println(e.getMessage());
+			System.out.println(e.getStackTrace());
 		}
+		
+
+		// App mainInstance = new App(args);
+		// if (mainInstance.appFlag) {
+		// 	Parser parser;
+		// 	try{
+		// 		parser = new Parser(mainInstance.sourceLanguage,
+		// 							mainInstance.progLanguage);
+
+		// 		// Get String from file
+		// 		for (String file: mainInstance.sourceFiles) {
+		// 			System.out.println(mainInstance.getFileContent(file));
+
+		// 			if (!mainInstance.writeFile( parser.parseString(
+		// 				mainInstance.getFileContent(file)), file)) {
+		// 				System.out.println("IO Exception on file write!");
+		// 				break;
+		// 			}
+		// 		}
+		// 		Translations translations = new Translations("fr", "python", "translations");
+		// 		translations.updateTranslations("fr","python");
+		// 	}catch(NotSupportedLanguage e){
+		// 		System.out.println(e.getMessage());
+		// 	}catch(IOException e) {
+		// 		System.out.println("Couldn't open file.");
+		// 	}
+		// }
     }
 }
