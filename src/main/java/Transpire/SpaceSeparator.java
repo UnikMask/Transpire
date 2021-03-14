@@ -5,7 +5,6 @@ import com.github.rwitzel.streamflyer.regex.MatchProcessor;
 import com.github.rwitzel.streamflyer.regex.MatchProcessorResult;
 
 import java.util.regex.MatchResult;
-import java.util.regex.Matcher;
 
 public class SpaceSeparator implements MatchProcessor {
     @Override

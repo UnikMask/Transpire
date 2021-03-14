@@ -18,6 +18,8 @@ public class Translations {
 	private String pLang;
 	private String maxSupportedVersion;
 	private Mapper mapper;
+	JSONParser parser;
+	JSONObject translationJSON;
 
 	public Translations(String sLang, String pLang, String rootPath) throws NotSupportedLanguage{
 		this(sLang,pLang,rootPath,"master");
@@ -48,11 +50,11 @@ public class Translations {
 			throw new NotSupportedLanguage("Sorry the written programming language is not supported.");
 		}
 
-		JSONParser parser = new JSONParser();
+		parser = new JSONParser();
 
 		try{
 			Object obj = parser.parse(new FileReader(loadFile.getPath()));
-			JSONObject translationJSON = (JSONObject) obj;
+			translationJSON = (JSONObject) obj;
 			System.out.println(translationJSON);
 
 			System.out.println("Parsing successful!");
@@ -83,6 +85,11 @@ public class Translations {
 	// 		return "if";
 	// 	}
 	// }
+
+	public String getCommentRegex(){
+		return translationJSON.get("commentRegex").toString();
+	}
+
 
 	public Mapper getMapper(){
 		return this.mapper;

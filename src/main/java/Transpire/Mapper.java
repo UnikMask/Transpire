@@ -26,10 +26,6 @@ public class Mapper {
 		return mapping.get(sLang) != null;
 	}
 
-	public String getCommentRegex(){
-	    return "";
-    }
-
 	@Override
 	public String toString(){
 		return mappingName;

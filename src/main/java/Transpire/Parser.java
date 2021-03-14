@@ -24,7 +24,7 @@ public class Parser {
         try {
             this.translator = new Translations(this.countryCode, this.progLang, "trnpkgs");
             this.mapper = this.translator.getMapper();
-            this.commentRegexes = this.mapper.getCommentRegex();
+            this.commentRegexes = this.translator.getCommentRegex();
         } catch (NotSupportedLanguage e){
             throw new NotSupportedLanguage("Unsupported Language");
         }
