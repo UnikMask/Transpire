@@ -13,11 +13,6 @@ import java.util.List;
 import net.sourceforge.argparse4j.inf.Namespace;
 
 public class App {
-    public String getGreeting() {
-        return "Suck ma balls";
-    }
-
-
 
 	// App arguments - stored here for now
 	static Prompt promptInstance = new Prompt();
@@ -25,38 +20,35 @@ public class App {
 	String sourceLanguage;
 	String targetLanguage;
 	String progLanguage;
-	boolean appFlag = true;
+	boolean appFlag;
 	Boolean updateFlag;
 
 
 	// Get files to translate in the program.
 	public List<String> getFilesToTranslate(Namespace resn) {
-		List<String> resFiles = (List<String>) resn.get("files");
-		return resFiles;
+		return resn.get("files");
 	}
 
 
 	// Get source language to translate from.
 	public String getSourceLanguage(Namespace resn) {
-			String resFiles = (String) resn.get("source language");
-			return resFiles;
+        return resn.get("source language");
 	}
 
 
 	// Get target language to translate to.
 	public String getTargetLanguage(Namespace resn) {
-		String resFiles = (String) resn.get("target language");
-		return resFiles;
+		return resn.get("target language");
 	}
 
 
 	// Get programming language to work on.
 	public String getProgLang(Namespace resn) {
-		return (String) resn.get("programming language");
+		return resn.get("programming language");
 	}
 
 	public Boolean getUpdate(Namespace resn) {
-		return (Boolean) resn.get("update");
+		return resn.get("update");
 	}
 
 
@@ -98,7 +90,7 @@ public class App {
 	public String getFileContent(String progFile) throws IOException {
 		StringBuilder contentBuild = new StringBuilder();
 
-		try (BufferedReader br = new BufferedReader(new FileReader(new File(progFile)))) {
+		try (BufferedReader br = new BufferedReader(new FileReader(progFile))) {
 			String currline;
 			while ((currline = br.readLine()) != null) {
 				contentBuild.append(currline).append("\n");
@@ -115,7 +107,7 @@ public class App {
 	// Write file from a string of content
 	public boolean writeFile(String output, String fileName) throws IOException {
 		File outDir = new File("transpireOut");
-		if (!outDir.exists()); {
+		if (!outDir.exists()) {
 			outDir.mkdir();
 		}
 		String newFileName = "transpireOut/" + fileName;

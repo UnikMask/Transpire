@@ -1,11 +1,9 @@
 package Transpire;
 
-// import org.json.simple.*;
 
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.*;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.simple.JSONObject;
@@ -14,11 +12,6 @@ import org.json.simple.parser.*;
 
 public class Translations {
 	
-	// private String sLang;
-	// private String code;
-	// private String lastUdated;
-	// private String pLang;
-	// private String maxSupportedVersion;
 	private Mapper mapper;
 	JSONParser parser;
 	JSONObject translationJSON;
@@ -43,7 +36,7 @@ public class Translations {
 				// int status = connection.getResponseCode();
 				BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 				String inputLine;
-				StringBuffer content = new StringBuffer();
+				StringBuilder content = new StringBuilder();
 				while((inputLine = in.readLine()) != null){
 					content.append(inputLine);
 				}
@@ -61,9 +54,6 @@ public class Translations {
 				BufferedWriter writer = new BufferedWriter(new FileWriter("./translations/" + sLang + "/" + pLang + ".json" ));
 				writer.write(prettyJson);
 				writer.close();
-
-				// System.out.println(content.toString());
-				// System.out.println(status);
 			}
 
 		} catch(IOException ignored){
@@ -78,17 +68,22 @@ public class Translations {
 		boolean foundSLang = false;
 		boolean foundPLang = false;
 		File loadFile = new File("");
-		for(File sLangFolder: Arrays.asList(rootFolder.listFiles())){
-			if(sLangFolder.getName().equals(sLang)){
-				foundSLang = true;
-				for(File pLangFile: Arrays.asList(sLangFolder.listFiles())){
-					if(pLangFile.getName().split("/")[0].replace(".json","").equals(pLang)){
-						foundPLang = true;
-						loadFile = pLangFile;
-					}
-				}
-			}
-		}
+		try {
+            for(File sLangFolder: rootFolder.listFiles()){
+                if(sLangFolder.getName().equals(sLang)){
+                    foundSLang = true;
+                    for(File pLangFile: sLangFolder.listFiles()){
+                        if(pLangFile.getName().split("/")[0].replace(".json","").equals(pLang)){
+                            foundPLang = true;
+                            loadFile = pLangFile;
+                        }
+                    }
+                }
+            }
+        } catch (NullPointerException e) {
+            System.out.println("File does not exist");
+        }
+
 		if(!foundSLang){
 			throw new NotSupportedLanguage("Sorry the spoken human language is not supported.");
 		}
@@ -101,14 +96,11 @@ public class Translations {
 		try{
 			Object obj = parser.parse(new FileReader(loadFile.getPath()));
 			translationJSON = (JSONObject) obj;
-			// System.out.println(translationJSON);
-
-			// System.out.println("Parsing successful!");
 
 
 			for(Object mapping: (JSONArray)translationJSON.get("mappings")){
 				JSONObject mappingStructure = (JSONObject) mapping;
-				if(((String)mappingStructure.get("mapping_name")).equals(version)){
+				if((mappingStructure.get("mapping_name")).equals(version)){
 					this.mapper= new Mapper(mappingStructure);
 					break;
 				}
@@ -119,18 +111,7 @@ public class Translations {
 			throw new NotSupportedLanguage("Sorry, the mapping file is corrupt. Please download again ");
 		}
 
-		// InputStream inputStream = ReadJsonArra
-
 	}
-
-
-	// public String getMapping(String languageToken){
-	// 	if(languageToken.equals("sinon")){
-	// 		return "else";
-	// 	}else{
-	// 		return "if";
-	// 	}
-	// }
 
 	public String getCommentRegex(){
 		return translationJSON.get("commentRegex").toString();
