@@ -3,7 +3,11 @@
  */
 package Transpire;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.List;
 
 import net.sourceforge.argparse4j.inf.Namespace;
@@ -17,15 +21,16 @@ public class App {
 
 	// App arguments - stored here for now
 	static Prompt promptInstance = new Prompt();
-	List<File> sourceFiles;
+	List<String> sourceFiles;
 	String sourceLanguage;
 	String targetLanguage;
+	String progLanguage;
 	boolean appFlag = true;
 
 
 	// Get files to translate in the program.
-	public List<File> getFilesToTranslate(Namespace resn) {
-		List<File> resFiles = (List<File>) resn.get("files");
+	public List<String> getFilesToTranslate(Namespace resn) {
+		List<String> resFiles = (List<String>) resn.get("files");
 		return resFiles;
 	}
 
@@ -44,6 +49,12 @@ public class App {
 	}
 
 
+	// Get programming language to work on.
+	public String getProgLang(Namespace resn) {
+		return (String) resn.get("programming language");
+	}
+
+
 	/**
 	 * Get application wanted variables based on given arguments.
 	 * @param args The app arguments.
@@ -58,6 +69,7 @@ public class App {
 				this.getSourceLanguage(resn);
 			targetLanguage =
 				this.getTargetLanguage(resn);
+			progLanguage = this.getProgLang(resn);
 			return true;
 		}
 		else {
@@ -75,6 +87,41 @@ public class App {
 	}
 
 
+	// Get file content from a string.
+	public String getFileContent(String progFile) throws IOException {
+		StringBuilder contentBuild = new StringBuilder();
+
+		try (BufferedReader br = new BufferedReader(new FileReader(new File(progFile)))) {
+			String currline;
+			while ((currline = br.readLine()) != null) {
+				contentBuild.append(currline).append("\n");
+			}
+			return contentBuild.toString();
+		}
+		catch (IOException e) {
+			System.out.println(e.getMessage());
+			return null;
+		}
+	}
+
+
+	// Write file from a string of content
+	public boolean writeFile(String output, String fileName) throws IOException {
+		File outDir = new File("transpireOut");
+		if (!outDir.exists()); {
+			outDir.mkdir();
+		}
+		String newFileName = "transpireOut/" + fileName;
+		try (FileWriter writer = new FileWriter(newFileName)){
+			writer.write(output);
+			return true;
+		}
+		catch(IOException e) {
+			return false;
+		}
+	}
+
+
     public static void main(String[] args) {
         //Base: transpire Bonjour.java fr
         //Backend: transpire Bonjour.java -s fr -t en
@@ -84,41 +131,23 @@ public class App {
 		if (mainInstance.appFlag) {
 			Parser parser;
 			try{
-				parser = new Parser("fr", "python");
-				System.out.println(parser.parseString("def multiplyAllSubsets(SuperNumSet):\n" +
-						"    '''Returns a Set of SuperNumbers that was generated from multiplying all of the subsets of the given set .'''\n" +
-						"    results = set()\n" +
-						"\n" +
-						"    si(len(SuperNumSet) == 0):\n" +
-						"        return results\n" +
-						"\n" +
-						"    # The length of the subset that is going to be created.\n" +
-						"    for subsetLen in range(1, len(SuperNumSet) + 1):\n" +
-						"        # By using the built in itertools method combinations it gets all of the subsets of a specified length from the given set.\n" +
-						"        subsetList = combinations(SuperNumSet, subsetLen)\n" +
-						"        for subset in subsetList:\n" +
-						"            # Goes through the subsets and multiples them together to see if a different number is produced.\n" +
-						"            results.add(reduce((lambda a, b: a * b), subset))\n" +
-						"    \n" +
-						"    return results\n" +
-						"\n" +
-						"\n" +
-						"def allPossibleNumbers(SuperNumSet):\n" +
-						"    '''Returns a Set of SuperNumbers that were generated from multipliying the values inside the given set in all of the possible ways'''\n" +
-						"    si(len(SuperNumSet) == 0):\n" +
-						"        return set()\n" +
-						"\n" +
-						"    modulus = list(SuperNumSet)[0].modulus\n" +
-						"\n" +
-						"    # Because of how modulus works when a numbers powers are taken and reduced to that base the results will end up in a loop.\n" +
-						"    # Because we know that it is a loop there is no need to search until infinity.\n" +
-						"    results = {SuperNum ** power for SuperNum in SuperNumSet for power in range(1, modulus + 1)}\n" +
-						"\n" +
-						"    # Multiplies all the SuperNumber subsets from the loops together in the hopes of finding a new SuperNumber.\n" +
-						"    results = multiplyAllSubsets(results)\n" +
-						"\n" +
-						"    return(results)"));
+				parser = new Parser(mainInstance.sourceLanguage,
+									mainInstance.progLanguage);
+
+				// Get String from file
+				for (String file: mainInstance.sourceFiles) {
+					System.out.println(mainInstance.getFileContent(file));
+
+					if (!mainInstance.writeFile( parser.parseString(
+						mainInstance.getFileContent(file)), file)) {
+						System.out.println("IO Exception on file write!");
+						break;
+					}
+				}
 			}catch(NotSupportedLanguage e){
+				System.out.println(e.getMessage());
+			}
+			catch (IOException e) {
 				System.out.println(e.getMessage());
 			}
 		}

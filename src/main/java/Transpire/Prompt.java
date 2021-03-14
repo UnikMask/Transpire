@@ -17,7 +17,7 @@ public class Prompt
 						 + "compilable code.");
 		parserEng.addArgument("files")
 			.metavar("FILE")
-			.type(File.class)
+			.type(String.class)
 			.nargs("+")
 			.help("A file to translate to other language");
 		parserEng.addArgument("--lang", "-l")
