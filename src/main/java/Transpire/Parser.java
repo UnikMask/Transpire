@@ -1,7 +1,5 @@
 package Transpire;
-import java.io.IOException;
-import java.io.Reader;
-import java.io.StringReader;
+import java.io.*;
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -38,6 +36,13 @@ public class Parser {
      * @return the contents of the file as string with all keywords replaced with english equivalent
      */
     public String parseString(String input) throws IOException {
+        String[] commentRegex = this.commentRegexes.split(" ");
+        for (String regex: commentRegex) {
+            input = removeComments(input, regex);
+        }
+        input = replaceQuotes(input);
+        input = replaceSingleQuotes(input);
+        System.out.println("--------------------------------------");
 
         Map<String, String> variableMap = new HashMap<>();
 
@@ -89,6 +94,48 @@ public class Parser {
         return result;
     }
 
+    private String replaceQuotes(String input) throws FileNotFoundException {
+        Scanner scanner = new Scanner(input);
+        scanner.useDelimiter("\"");
+
+        // starts from first quote instead of start of file
+        if (scanner.hasNext()) {
+            scanner.next();
+        }
+
+        while(scanner.hasNext()) {
+            String quote = "\"" + scanner.next() + "\"";
+            String quoteName = generateQuoteName();
+            quoteMap.put(quoteName, quote);
+            input = input.replace(quote, quoteName);
+            if (scanner.hasNext()) {
+                scanner.next();
+            }
+        }
+        return input;
+    }
+
+    private String replaceSingleQuotes(String input) throws FileNotFoundException {
+        Scanner scanner = new Scanner(input);
+        scanner.useDelimiter("'");
+
+        // starts from first quote instead of start of file
+        if (scanner.hasNext()) {
+            scanner.next();
+        }
+
+        while(scanner.hasNext()) {
+            String quote = "'" + scanner.next() + "'";
+            String quoteName = generateQuoteName();
+            quoteMap.put(quoteName, quote);
+            input = input.replace(quote, quoteName);
+            if (scanner.hasNext()) {
+                scanner.next();
+            }
+        }
+        return input;
+    }
+
     private String returnTabsAndSpaces(List<String> tokens, int i) {
         String replace = "";
         for(int j = 0; j < tokens.get(i).length(); j++){
@@ -105,7 +152,10 @@ public class Parser {
     private int varCount = 0;
 
     public String generateVarName() {
-        varCount++;
-        return "var" + varCount;
+        return "var" + System.nanoTime();
+    }
+
+    public String generateQuoteName() {
+        return "quote" + System.nanoTime();
     }
 }

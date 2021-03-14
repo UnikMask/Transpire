@@ -53,11 +53,10 @@ import org.ajoberstar.grgit.Grgit
 build.doLast {
     def trnDir = new File( 'trnpkgs' )
     if ( !trnDir.exists(  )) {
-        def grgit = Grgit.clone(dir: 'trnpkgs', uri: 'https://www.github.com/UnikMask/trnpkgs')
+        def grgit = Grgit.clone(dir: '$buildDir/trnpkgs', uri: 'https://www.github.com/UnikMask/trnpkgs')
     }
 }
 clean.doFirst {
-    delete "trnpkgs"
 }
 
 //create a single Jar with all dependencies
