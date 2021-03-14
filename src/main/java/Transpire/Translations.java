@@ -9,6 +9,7 @@ import java.net.URL;
 import java.util.*;
 import java.util.Scanner;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONArray;
 import org.json.simple.parser.*;
@@ -50,8 +51,14 @@ public class Translations {
 			}
 			in.close();
 			connection.disconnect();
+
+			ObjectMapper mapper = new ObjectMapper();
+			Object jsonObject = mapper.readValue(content.toString(), Object.class);
+			String prettyJson = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(jsonObject);
+
+
 			BufferedWriter writer = new BufferedWriter(new FileWriter("./translations/" + sLang + "/" + pLang + ".json" ));
-			writer.write(content.toString());
+			writer.write(prettyJson);
 			writer.close();
 
 			// System.out.println(content.toString());

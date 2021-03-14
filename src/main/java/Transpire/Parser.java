@@ -22,7 +22,7 @@ public class Parser {
         this.progLang = progLang;
         this.countryCode = countryCode;
         try {
-            this.translator = new Translations(this.countryCode, this.progLang, "trnpkgs");
+            this.translator = new Translations(this.countryCode, this.progLang, "translations");
             this.mapper = this.translator.getMapper();
             this.commentRegexes = this.translator.getCommentRegex();
         } catch (NotSupportedLanguage e){
