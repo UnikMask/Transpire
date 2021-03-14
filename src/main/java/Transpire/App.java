@@ -122,7 +122,8 @@ public class App {
 
 
 	// Write file from a string of content
-	public boolean writeFile(String output, String fileName) throws IOException {
+	public boolean writeFile(String output, String fileDir) throws IOException {
+		String fileName = new File(fileDir).getName();
 		verboseLog("Writing translation of " + fileName + " to transpire/" + fileName);
 		File outDir = new File("transpireOut");
 		if (!outDir.exists()); {

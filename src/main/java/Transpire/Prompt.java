@@ -29,7 +29,7 @@ public class Prompt
 			.required(true)
 			.dest("source language")
 			.type(String.class)
-			.choices("en", "fr", "jp")
+			.choices("en", "fr", "jp", "tr")
 			.help("The source file natural language.");
 		parserEng.addArgument("--target", "-t")
 			.dest("target language")
