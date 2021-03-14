@@ -45,16 +45,16 @@ public class Translations {
 				in.close();
 				App.verboseLog("File written!");
 				connection.disconnect();
-				App.verboseLog("Disconnected from server");
 
 				ObjectMapper mapper = new ObjectMapper();
 				Object jsonObject = mapper.readValue(content.toString(), Object.class);
 				String prettyJson = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(jsonObject);
 
+			File transFile = new File("./translations");
+			if (!transFile.exists()) transFile.mkdir();
+
 			File file = new File("./translations/" + sLang + "/");
-
 			if(!file.exists()) file.mkdir();
-
 				BufferedWriter writer = new BufferedWriter(new FileWriter("./translations/" + sLang + "/" + pLang + ".json" ));
 				writer.write(prettyJson);
 				writer.close();
