@@ -4,6 +4,7 @@
 package Transpire;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 import net.sourceforge.argparse4j.inf.Namespace;
@@ -120,6 +121,8 @@ public class App {
 						"    return(results)"));
 			}catch(NotSupportedLanguage e){
 				System.out.println(e.getMessage());
+			}catch(IOException e) {
+				System.out.println("Couldn't open file.");
 			}
 		}
     }

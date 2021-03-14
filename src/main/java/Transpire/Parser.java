@@ -1,11 +1,14 @@
 package Transpire;
+import java.io.IOException;
+import java.io.Reader;
+import java.io.StringReader;
 import java.util.*;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.python.core.PyObject;
-import org.python.core.PyString;
-import org.python.util.PythonInterpreter;
+import com.github.rwitzel.streamflyer.core.Modifier;
+import com.github.rwitzel.streamflyer.core.ModifyingReader;
+import org.apache.commons.io.IOUtils;
+import com.github.rwitzel.streamflyer.regex.RegexModifier;
 
 
 public class Parser {
@@ -13,7 +16,6 @@ public class Parser {
     String countryCode;
     Translations translator;
     Mapper mapper;
-    PythonInterpreter interpreter = new PythonInterpreter();
 
     public Parser(String countryCode, String progLang) throws NotSupportedLanguage {
         this.progLang = progLang;
@@ -35,18 +37,19 @@ public class Parser {
      * @param input the contents of the file as a string
      * @return the contents of the file as string with all keywords replaced with english equivalent
      */
-    public String parseString(String input) {
+    public String parseString(String input) throws IOException {
 
         Map<String, String> variableMap = new HashMap<>();
 
         input = input.replaceAll(" {4}", "\t");
         input = input.replaceAll("\n", "\n ");
 
-        interpreter.exec("import re");
-        interpreter.set("file", input );
-        interpreter.set("regex", "r'(\\|{2}|&{2}|\\*{2}|!=|={2}|>=|;|:|\\{|}|\\+|-|\\*|/|\\[|\\]|>|<|=|\\(|\\)|\\.)'");
-        interpreter.set("contents", interpreter.eval("re.sub(regex, ' \\g<0> ', file)"));
-        String toTokenize = interpreter.get("contents", String.class);
+        Reader baseReader = new StringReader(input);
+
+        Modifier modifier = new RegexModifier("(\\|{2}|&{2}|\\*{2}|!=|={2}|>=|;|:|\\{|}|\\+|-|\\*|/|\\[|\\]|>|<|=|\\(|\\)|\\.)", Pattern.MULTILINE, new SpaceSeparator(), 0 ,2048);
+        Reader modifyingReader = new ModifyingReader(baseReader, modifier);
+
+        String toTokenize = IOUtils.toString(modifyingReader);
         List<String> tokens = new ArrayList<String>(Arrays.asList(toTokenize.split(" ")));
 
         tokens.removeAll(Collections.singletonList(""));

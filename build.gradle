@@ -31,7 +31,7 @@ dependencies {
 	compile 'net.sourceforge.argparse4j:argparse4j:0.8.1'
     compile 'com.googlecode.json-simple:json-simple:1.1.1'
     compile 'org.json:json:20210307'
-    compile group: 'org.python', name: 'jython-standalone', version: '2.7.2'
+    compile 'com.github.rwitzel.streamflyer:streamflyer-core:1.2.0'
 
     // Use JUnit Jupiter API for testing.
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.2'
