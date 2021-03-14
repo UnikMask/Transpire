@@ -23,7 +23,6 @@ public class Translations {
 	public static void updateTranslations(String sLang, String pLang, Boolean updateFlag) throws NotSupportedLanguage{
 		try{
 			// Check if file already exists
-			File translationFile = new File("translations/" + sLang + "/" + pLang + ".json");
 			if (updateFlag) {
 				URL url = new URL("http://unikbase.space/translations/" + sLang + "/" + pLang + ".json");
 				HttpURLConnection connection = (HttpURLConnection) url.openConnection();
