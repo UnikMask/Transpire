@@ -46,7 +46,6 @@ public class Parser {
         }
         input = replaceQuotes(input);
         input = replaceSingleQuotes(input);
-        System.out.println("--------------------------------------");
 
         Map<String, String> variableMap = new HashMap<>();
 
@@ -106,7 +105,7 @@ public class Parser {
         return result;
     }
 
-    private String replaceQuotes(String input) throws FileNotFoundException {
+    private String replaceQuotes(String input) {
         Scanner scanner = new Scanner(input);
         scanner.useDelimiter("\"");
 
@@ -127,7 +126,7 @@ public class Parser {
         return input;
     }
 
-    private String replaceSingleQuotes(String input) throws FileNotFoundException {
+    private String replaceSingleQuotes(String input) {
         Scanner scanner = new Scanner(input);
         scanner.useDelimiter("'");
 

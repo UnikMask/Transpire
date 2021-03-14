@@ -28,11 +28,8 @@ public class Translations {
 	public Translations(String sLang, String pLang, String rootPath) throws NotSupportedLanguage{
 		this(sLang,pLang,rootPath,"master");
 	}
-	public Translations(String sLang, String pLang) throws NotSupportedLanguage{
-		updateTranslations(sLang, pLang);
-	}
 
-	public void updateTranslations(String sLang, String pLang) throws NotSupportedLanguage{
+	public static void updateTranslations(String sLang, String pLang) throws NotSupportedLanguage{
 		try{
 			URL url = new URL("http://unikbase.space/translations/" + sLang + "/" + pLang + ".json");
 			System.out.println(url);
@@ -64,10 +61,8 @@ public class Translations {
 			// System.out.println(content.toString());
 			// System.out.println(status);
 
-		}catch(MalformedURLException e){
-			throw new NotSupportedLanguage("Sowee, the given language is nto currently supported. Maybe you can contribute? 😢");
-		}catch(IOException e){
-			throw new NotSupportedLanguage("No internet connection. Plz pay your bills");
+		} catch(IOException ignored){
+
 		}
 	}
 
@@ -100,7 +95,7 @@ public class Translations {
 
 		try{
 			Object obj = parser.parse(new FileReader(loadFile.getPath()));
-			JSONObject translationJSON = (JSONObject) obj;
+			translationJSON = (JSONObject) obj;
 			// System.out.println(translationJSON);
 
 			// System.out.println("Parsing successful!");
