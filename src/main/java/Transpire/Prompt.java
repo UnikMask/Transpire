@@ -51,6 +51,11 @@ public class Prompt
 			.setDefault(false)
 			.setConst(true)
 			.help("Whether the program should be verbose.");
+		parserEng.addArgument("--config", "-c")
+			.dest("configDir")
+			.type(String.class)
+			.setDefault(System.getProperty("user.home") + "/.trnpkgs")
+			.help("The location of the config directory");
 
 		try {
 			return parserEng.parseArgs(args);
