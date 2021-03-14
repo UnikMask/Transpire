@@ -137,7 +137,9 @@ public class App {
 		 if (mainInstance.appFlag) {
 		 	Parser parser;
 		 	try{
-		 		Translations.updateTranslations(mainInstance.sourceLanguage, mainInstance.progLanguage);
+		 		Translations.updateTranslations(mainInstance.sourceLanguage,
+												mainInstance.progLanguage,
+												mainInstance.updateFlag);
 		 		parser = new Parser(mainInstance.sourceLanguage,
 		 							mainInstance.progLanguage);
 

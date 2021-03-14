@@ -4,10 +4,8 @@ package Transpire;
 
 import java.io.*;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.*;
-import java.util.Scanner;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.simple.JSONObject;
@@ -16,11 +14,11 @@ import org.json.simple.parser.*;
 
 public class Translations {
 	
-	private String sLang;
-	private String code;
-	private String lastUdated;
-	private String pLang;
-	private String maxSupportedVersion;
+	// private String sLang;
+	// private String code;
+	// private String lastUdated;
+	// private String pLang;
+	// private String maxSupportedVersion;
 	private Mapper mapper;
 	JSONParser parser;
 	JSONObject translationJSON;
@@ -29,37 +27,41 @@ public class Translations {
 		this(sLang,pLang,rootPath,"master");
 	}
 
-	public static void updateTranslations(String sLang, String pLang) throws NotSupportedLanguage{
+	public static void updateTranslations(String sLang, String pLang, Boolean updateFlag) throws NotSupportedLanguage{
 		try{
-			URL url = new URL("http://unikbase.space/translations/" + sLang + "/" + pLang + ".json");
-			System.out.println(url);
-			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-			connection.setRequestMethod("GET");
+			// Check if file already exists
+			File translationFile = new File("translations/" + sLang + "/" + pLang + ".json");
+			if (updateFlag || !translationFile.exists()) {
+				URL url = new URL("http://unikbase.space/translations/" + sLang + "/" + pLang + ".json");
+				System.out.println(url);
+				HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+				connection.setRequestMethod("GET");
 
-			connection.setReadTimeout(5000);
-			connection.setConnectTimeout(5000);
+				connection.setReadTimeout(5000);
+				connection.setConnectTimeout(5000);
 
-			int status = connection.getResponseCode();
-			BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-			String inputLine;
-			StringBuffer content = new StringBuffer();
-			while((inputLine = in.readLine()) != null){
-				content.append(inputLine);
+				// int status = connection.getResponseCode();
+				BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+				String inputLine;
+				StringBuffer content = new StringBuffer();
+				while((inputLine = in.readLine()) != null){
+					content.append(inputLine);
+				}
+				in.close();
+				connection.disconnect();
+
+				ObjectMapper mapper = new ObjectMapper();
+				Object jsonObject = mapper.readValue(content.toString(), Object.class);
+				String prettyJson = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(jsonObject);
+
+
+				BufferedWriter writer = new BufferedWriter(new FileWriter("./translations/" + sLang + "/" + pLang + ".json" ));
+				writer.write(prettyJson);
+				writer.close();
+
+				// System.out.println(content.toString());
+				// System.out.println(status);
 			}
-			in.close();
-			connection.disconnect();
-
-			ObjectMapper mapper = new ObjectMapper();
-			Object jsonObject = mapper.readValue(content.toString(), Object.class);
-			String prettyJson = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(jsonObject);
-
-
-			BufferedWriter writer = new BufferedWriter(new FileWriter("./translations/" + sLang + "/" + pLang + ".json" ));
-			writer.write(prettyJson);
-			writer.close();
-
-			// System.out.println(content.toString());
-			// System.out.println(status);
 
 		} catch(IOException ignored){
 
