@@ -12,7 +12,12 @@ This project is the parser. It's main role is to fetch the up-to-date translatio
 
 The translations part of our project is a completely different repository: 
 
-https://github.com/UnikMask/trnpkgs
+https://github.com/OcEaNvS/trnpkgs
+
+
+The trnpkgs will be open sourced to allow pull requests from any user around the globe to make their own translations to a language. 
+
+Everytime someone builds a new repository, the program will fetch a tar ball of the most recent  
 
 
 ## Directory Structure
