@@ -30,17 +30,19 @@ public class Translations {
 	public static void updateTranslations(String sLang, String pLang, Boolean updateFlag) throws NotSupportedLanguage{
 		try{
 			// Check if file already exists
+			App.verboseLog("Checking for translation...");
 			File translationFile = new File("translations/" + sLang + "/" + pLang + ".json");
 			if (updateFlag || !translationFile.exists()) {
 				URL url = new URL("http://unikbase.space/translations/" + sLang + "/" + pLang + ".json");
-				System.out.println(url);
+				App.verboseLog("Translation not present! Downloading it from " + url);
 				HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 				connection.setRequestMethod("GET");
 
 				connection.setReadTimeout(5000);
 				connection.setConnectTimeout(5000);
 
-				// int status = connection.getResponseCode();
+				int status = connection.getResponseCode();
+				App.verboseLog("Getting response code " + status);
 				BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 				String inputLine;
 				StringBuffer content = new StringBuffer();
@@ -48,7 +50,9 @@ public class Translations {
 					content.append(inputLine);
 				}
 				in.close();
+				App.verboseLog("File written!");
 				connection.disconnect();
+				App.verboseLog("Disconnected from server");
 
 				ObjectMapper mapper = new ObjectMapper();
 				Object jsonObject = mapper.readValue(content.toString(), Object.class);
@@ -79,6 +83,8 @@ public class Translations {
 			if(sLangFolder.getName().equals(sLang)){
 				foundSLang = true;
 				for(File pLangFile: Arrays.asList(sLangFolder.listFiles())){
+		App.verboseLog("Translating " + pLang
+					   + " program at " + pLangFile + " to " + sLang);
 					if(pLangFile.getName().split("/")[0].replace(".json","").equals(pLang)){
 						foundPLang = true;
 						loadFile = pLangFile;
@@ -111,7 +117,7 @@ public class Translations {
 				}
 			}
 
-			System.out.println(this.mapper);
+			// System.out.println(this.mapper);
 		}catch(Exception e){
 			throw new NotSupportedLanguage("Sorry, the mapping file is corrupt. Please download again ");
 		}

@@ -46,6 +46,13 @@ public class Prompt
 			.setDefault(false)
 			.setConst(true)
 			.help("Whether to update the JSON if already downloaded.");
+		parserEng.addArgument("--verbose", "-v")
+			.dest("verboseOut")
+			.action(Arguments.storeConst())
+			.type(Boolean.class)
+			.setDefault(false)
+			.setConst(true)
+			.help("Whether the program should be verbose.");
 
 		try {
 			Namespace resn = parserEng.parseArgs(args);

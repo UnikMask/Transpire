@@ -14,19 +14,20 @@ import net.sourceforge.argparse4j.inf.Namespace;
 
 public class App {
     public String getGreeting() {
-        return "Suck ma balls";
+        return "Transpire v.1.0.0";
     }
-
 
 
 	// App arguments - stored here for now
 	static Prompt promptInstance = new Prompt();
+	static App mainInstance_s;
 	List<String> sourceFiles;
 	String sourceLanguage;
 	String targetLanguage;
 	String progLanguage;
 	boolean appFlag = true;
 	Boolean updateFlag;
+	Boolean verboseFlag;
 
 
 	// Get files to translate in the program.
@@ -60,6 +61,12 @@ public class App {
 	}
 
 
+	public static void verboseLog(String msg) {
+		if (mainInstance_s.verboseFlag) {
+			System.out.println(msg);
+		}
+	}
+
 
 	/**
 	 * Get application wanted variables based on given arguments.
@@ -77,6 +84,7 @@ public class App {
 				this.getTargetLanguage(resn);
 			progLanguage = this.getProgLang(resn);
 			updateFlag = this.getUpdate(resn);
+			verboseFlag = (Boolean) resn.get("verboseOut");
 			return true;
 		}
 		else {
@@ -90,12 +98,14 @@ public class App {
 	 * @param args The application parameters.
 	 */
 	public App(String[] args) {
+		System.out.println(this.getGreeting());
 		appFlag = getArgsInApp(args);
 	}
 
 
 	// Get file content from a string.
 	public String getFileContent(String progFile) throws IOException {
+		verboseLog("Reading content of " + progFile);
 		StringBuilder contentBuild = new StringBuilder();
 
 		try (BufferedReader br = new BufferedReader(new FileReader(new File(progFile)))) {
@@ -114,8 +124,10 @@ public class App {
 
 	// Write file from a string of content
 	public boolean writeFile(String output, String fileName) throws IOException {
+		verboseLog("Writing translation of " + fileName + " to transpire/" + fileName);
 		File outDir = new File("transpireOut");
 		if (!outDir.exists()); {
+			verboseLog("transpireOut/ doesn't exist! Creating it.");
 			outDir.mkdir();
 		}
 		String newFileName = "transpireOut/" + fileName;
@@ -133,31 +145,31 @@ public class App {
         //Base: transpire Bonjour.java fr
         //Backend: transpire Bonjour.java -s fr -t en
         // --help
-		 App mainInstance = new App(args);
-		 if (mainInstance.appFlag) {
-		 	Parser parser;
-		 	try{
-		 		Translations.updateTranslations(mainInstance.sourceLanguage,
-												mainInstance.progLanguage,
-												mainInstance.updateFlag);
-		 		parser = new Parser(mainInstance.sourceLanguage,
-		 							mainInstance.progLanguage);
 
-		 		// Get String from file
-		 		for (String file: mainInstance.sourceFiles) {
-		 			System.out.println(mainInstance.getFileContent(file));
+		App mainInstance = new App(args);
+		mainInstance_s = mainInstance;
+		if (mainInstance.appFlag) {
+		Parser parser;
+		try{
+			Translations.updateTranslations(mainInstance.sourceLanguage,
+											mainInstance.progLanguage,
+											mainInstance.updateFlag);
+			parser = new Parser(mainInstance.sourceLanguage,
+								mainInstance.progLanguage);
 
-					if (!mainInstance.writeFile(parser.parseString(mainInstance.getFileContent(file)), file)){
-						System.out.println("Io Exception on file write!");
-						break;
-					}
-
-		 		}
-		 	}catch(NotSupportedLanguage e){
-		 		System.out.println(e.getMessage());
-		 	}catch(IOException e) {
-		 		System.out.println("Couldn't open file.");
-		 	}
-		 }
+			// Get String from file
+			for (String file: mainInstance.sourceFiles) {
+				String output = parser.parseString(mainInstance.getFileContent(file));
+				if (!mainInstance.writeFile(output, file)){
+					System.out.println("Io Exception on file write!");
+					break;
+				}
+			}
+		}catch(NotSupportedLanguage e){
+			System.out.println(e.getMessage());
+		}catch(IOException e) {
+			System.out.println("Couldn't open file.");
+		}
+		}
     }
 }
