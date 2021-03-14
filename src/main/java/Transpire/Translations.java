@@ -26,7 +26,6 @@ public class Translations {
 			File translationFile = new File("translations/" + sLang + "/" + pLang + ".json");
 			if (updateFlag) {
 				URL url = new URL("http://unikbase.space/translations/" + sLang + "/" + pLang + ".json");
-				System.out.println(url);
 				HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 				connection.setRequestMethod("GET");
 
@@ -106,7 +105,6 @@ public class Translations {
 				}
 			}
 
-			System.out.println(this.mapper);
 		}catch(Exception e){
 			throw new NotSupportedLanguage("Sorry, the mapping file is corrupt. Please download again ");
 		}

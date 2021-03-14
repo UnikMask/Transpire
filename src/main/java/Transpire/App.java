@@ -137,7 +137,6 @@ public class App {
 
 		 		// Get String from file
 		 		for (String file: mainInstance.sourceFiles) {
-		 			System.out.println(mainInstance.getFileContent(file));
 
 					if (!mainInstance.writeFile(parser.parseString(mainInstance.getFileContent(file)), file)){
 						System.out.println("Io Exception on file write!");
