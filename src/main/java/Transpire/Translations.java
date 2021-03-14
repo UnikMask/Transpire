@@ -54,7 +54,6 @@ public class Translations {
 			File file = new File("./translations/" + sLang + "/");
 
 			if(!file.exists()) file.mkdir();
-
 				BufferedWriter writer = new BufferedWriter(new FileWriter("./translations/" + sLang + "/" + pLang + ".json" ));
 				writer.write(prettyJson);
 				writer.close();

@@ -11,7 +11,7 @@ Yığın *yeniYığın()
     Yığın *bu = bellekAyır(boyutu(Yığın)); //Allocate memory to the Stack struct.
     bu->kapasite = STANDART_BOYUT;
     bu->boy = 0;
-    bu->sıra = bellekAyır(boyut(kesirli) * bu->kapasite); //Allocate memory to the array that is representing the stack.
+    bu->sıra = bellekAyır(boyutu(kesirli) * bu->kapasite); //Allocate memory to the array that is representing the stack.
     if(bu == GEÇERSİZ || bu->sıra == GEÇERSİZ) //Check if the memory allocations did fail.
     {
         yazf("Memory Allocation Failed");
@@ -36,7 +36,7 @@ bool Yığınİtle(Yığın *bu, kesirli eleman)
     eğer (bu->boy == bu->kapasite) //Check if the size of the stack equal to the current capacity.
     {
         bu->kapasite *= 2;
-        bu->sıra = yeniBellekAyır(bu->sıra, boyut(kesirli) * bu->kapasite); //Reallocate memory to the array with increased capacity.
+        bu->sıra = yeniBellekAyır(bu->sıra, boyutu(kesirli) * bu->kapasite); //Reallocate memory to the array with increased capacity.
     }
 
     eğer (bu->sıra == GEÇERSİZ) //Check if the memory reallocation did not fail.
@@ -46,7 +46,7 @@ bool Yığınİtle(Yığın *bu, kesirli eleman)
         çık(1);
     }
 
-    eğer (bu->boyut < bu->kapasite) //Check if there is enough space inside the stack.
+    eğer (bu->boy < bu->kapasite) //Check if there is enough space inside the stack.
     {
         bu->sıra[bu->size++] = element; //Add the element to the stack and then increase the size of the stack.
         cevapVer doğru;
@@ -65,14 +65,14 @@ bool YığınÇıkar(Yığın *bu, kesirli *retval)
     cevapVer yanlış;
 }
 
-tamsayı YığınBoyut(Yığın *bu)
+tamsayı YığınBoy(Yığın *bu)
 {
     cevapVer bu->boy;
 }
 
 bool YığınBoş(Yığın *bu)
 {
-    cevapVer YığınBoyut(bu) == 0 ? doğru : yanlış; //Check if the size of the array is 0 return true if it is.
+    cevapVer YığınBoy(bu) == 0 ? doğru : yanlış; //Check if the size of the array is 0 return true if it is.
 }
 
 boş YığınTemizle(Yığın *bu)
@@ -80,7 +80,7 @@ boş YığınTemizle(Yığın *bu)
     bu->kapasite = STANDART_BOYUT; //Set the capacity to default.
     bu->boy = 0; //Set the size to 0
     serbestBırak(bu->sıra); //Free the current array.
-    bu->sıra = bellekAyır(boyut(float) * bu->kapasite); //Allocate new memory to the array.
+    bu->sıra = bellekAyır(boyutu(float) * bu->kapasite); //Allocate new memory to the array.
     eğer (bu->sıra == GEÇERSİZ)
     {
         yazf("Memory Allocation Failed");
