@@ -7,7 +7,7 @@
 .project
 .settings
 bin/
-trnpkgs
+translations/**
 
 # Ignore Gradle GUI config
 gradle-app.setting
