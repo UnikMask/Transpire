@@ -1,5 +1,12 @@
 # Transpire
-A hackathon project to write programs in your native language
+
+*CAN'T SPEAK ENGLISH? ATLEAST YOU CAN CODE!*
+
+## Project Description
+
+This project sets up an open-source-contribution environemnt where users anywhere around the globe can contribute translations of tokens in various different languages. (we implemented java, c, python in the span of 1 hour as an example to show how general and powerful our program is)
+
+Our project will automatically keep track of new translation contributions and integrate it into our "transpiler" which will allow you to code in any human-spoken-language and generate source code for any programming langauge (given that someone committed translations of it to the repository).
 
 ## How does this all work?
 
