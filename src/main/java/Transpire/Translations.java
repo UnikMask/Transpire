@@ -31,7 +31,7 @@ public class Translations {
 		try{
 			// Check if file already exists
 			File translationFile = new File("translations/" + sLang + "/" + pLang + ".json");
-			if (updateFlag || !translationFile.exists()) {
+			if (updateFlag) {
 				URL url = new URL("http://unikbase.space/translations/" + sLang + "/" + pLang + ".json");
 				System.out.println(url);
 				HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -54,6 +54,9 @@ public class Translations {
 				Object jsonObject = mapper.readValue(content.toString(), Object.class);
 				String prettyJson = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(jsonObject);
 
+			File file = new File("./translations/" + sLang + "/");
+
+			if(!file.exists()) file.mkdir();
 
 				BufferedWriter writer = new BufferedWriter(new FileWriter("./translations/" + sLang + "/" + pLang + ".json" ));
 				writer.write(prettyJson);

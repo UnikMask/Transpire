@@ -25,13 +25,13 @@ public class Prompt
 			.required(true)
 			.dest("programming language")
 			.type(String.class)
-			.choices("python", "c")
+			.choices("python", "c", "java")
 			.help("The programming language used here.");
 		parserEng.addArgument("--source", "-s")
 			.required(true)
 			.dest("source language")
 			.type(String.class)
-			.choices("en", "fr")
+			.choices("en", "fr", "jp")
 			.help("The source file natural language.");
 		parserEng.addArgument("--target", "-t")
 			.dest("target language")

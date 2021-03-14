@@ -26,7 +26,7 @@ public class Parser {
             this.mapper = this.translator.getMapper();
             this.commentRegexes = this.translator.getCommentRegex();
         } catch (NotSupportedLanguage e){
-            throw new NotSupportedLanguage("Unsupported Language");
+            throw new NotSupportedLanguage(e.getMessage());
         }
     }
 
@@ -47,6 +47,7 @@ public class Parser {
         input = replaceQuotes(input);
         input = replaceSingleQuotes(input);
 
+
         Map<String, String> variableMap = new HashMap<>();
 
         input = input.replaceAll(" {4}", "\t");
@@ -57,7 +58,7 @@ public class Parser {
         String regex = "(\\/{2}=|" + "\\*{2}=|" + "\\>{2}=|" + "\\<{2}=|" + "\\|{2}|" + "&{2}|" + "\\*{2}|" + "!=|"+
                 "->|" + ":{2}|" + "\\+{2}|" + "\\-{2}|" + "={2}|" + ">=|" + "<=|" + "\\+=|" + "\\-=|" + "\\*=|" + "\\/=|" + "\\%=|" +
                 "&=|" + "\\|=|" + "\\^=|" + "\\>{2}|" + "\\<{2}|" + ";|" + ":|" + "\\{|" + "\\}|" + "\\+|" + "\\-|" + "\\*|" + "\\/|" + "\\[|" + "\\]|" + ">|" + "<|" +
-                "=|" + "\\(|" + "\\)|" + "\\.|" + ",|" + "&|" + "\\||" + "%|" + "^|" + "~" + ")";
+                "=|" + "\\(|" + "\\)|" + "\\.|" + ",|" + "&|" + "\\||" + "%|" + "\\^|" + "~" + ")";
 
 
         Modifier modifier = new RegexModifier(regex, Pattern.MULTILINE, new SpaceSeparator(), 0 ,2048);
@@ -68,25 +69,26 @@ public class Parser {
 
         tokens.removeAll(Collections.singletonList(""));
 
+
         for (int i = 0; i < tokens.size(); i++) {
-            if(mapper.checkIfKeyword(tokens.get(i).trim())){
+            if (mapper.checkIfKeyword(tokens.get(i).trim())) {
                 String replace = returnTabsAndSpaces(tokens, i);
                 tokens.set(i, replace + mapper.translate(tokens.get(i).trim()));
             }
 
-            if(i < tokens.size()-1 && tokens.get(i + 1).equals("=")) {
+            if (i < tokens.size() - 1 && tokens.get(i + 1).equals("=")) {
                 String replace = returnTabsAndSpaces(tokens, i);
                 String newName = generateVarName();
-                variableMap . put(tokens.get(i), newName);
+                variableMap.put(tokens.get(i), newName);
                 tokens.set(i, replace + newName);
             }
 
-            if(variableMap.get(tokens.get(i).trim()) != null) {
+            if (variableMap.get(tokens.get(i).trim()) != null) {
                 String replace = returnTabsAndSpaces(tokens, i);
                 tokens.set(i, replace + variableMap.get(tokens.get(i).trim()));
             }
 
-            if(this.quoteMap.get(tokens.get(i).trim()) != null) {
+            if (this.quoteMap.get(tokens.get(i).trim()) != null) {
                 tokens.set(i, this.quoteMap.get(tokens.get(i).trim()));
             }
         }
@@ -101,6 +103,7 @@ public class Parser {
                 result = result + " " + token;
             }
         }
+
 
         return result;
     }
