@@ -1,7 +1,5 @@
 package Transpire;
-import java.io.IOException;
-import java.io.Reader;
-import java.io.StringReader;
+import java.io.*;
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -16,6 +14,9 @@ public class Parser {
     String countryCode;
     Translations translator;
     Mapper mapper;
+    Map<String, String> quoteMap = new HashMap<>();
+    String commentRegexes;
+
 
     public Parser(String countryCode, String progLang) throws NotSupportedLanguage {
         this.progLang = progLang;
@@ -23,6 +24,7 @@ public class Parser {
         try {
             this.translator = new Translations(this.countryCode, this.progLang, "trnpkgs");
             this.mapper = this.translator.getMapper();
+            this.commentRegexes = this.translator.getCommentRegex();
         } catch (NotSupportedLanguage e){
             throw new NotSupportedLanguage("Unsupported Language");
         }
@@ -38,6 +40,13 @@ public class Parser {
      * @return the contents of the file as string with all keywords replaced with english equivalent
      */
     public String parseString(String input) throws IOException {
+        String[] commentRegex = this.commentRegexes.split(" ");
+        for (String regex: commentRegex) {
+            input = removeComments(input, regex);
+        }
+        input = replaceQuotes(input);
+        input = replaceSingleQuotes(input);
+        System.out.println("--------------------------------------");
 
         Map<String, String> variableMap = new HashMap<>();
 
@@ -45,13 +54,18 @@ public class Parser {
         input = input.replaceAll("\n", "\n ");
 
         Reader baseReader = new StringReader(input);
-        String regex = "(\\|{2}|&{2}|\\*{2}|!=|\\+{2}|\\-{2}|={2}|>=|;|:|\\{|}|\\+|-|\\*|/|\\[|\\]|>|<|=|\\(|\\)|\\.)";
+        //String regex = ("(\\|{2}|&{2}|\\*{2}|!=|->|:{2}|\\-{2}|={2}|>=|;|:|\\{|}\\+|-|\\*|/|\\[|\\]|>|<|=|\\(|\\)|\\.|,|&
+        String regex = "(\\/{2}=|" + "\\*{2}=|" + "\\>{2}=|" + "\\<{2}=|" + "\\|{2}|" + "&{2}|" + "\\*{2}|" + "!=|"+
+                "->|" + ":{2}|" + "\\+{2}|" + "\\-{2}|" + "={2}|" + ">=|" + "<=|" + "\\+=|" + "\\-=|" + "\\*=|" + "\\/=|" + "\\%=|" +
+                "&=|" + "\\|=|" + "\\^=|" + "\\>{2}|" + "\\<{2}|" + ";|" + ":|" + "\\{|" + "\\}|" + "\\+|" + "\\-|" + "\\*|" + "\\/|" + "\\[|" + "\\]|" + ">|" + "<|" +
+                "=|" + "\\(|" + "\\)|" + "\\.|" + ",|" + "&|" + "\\||" + "%|" + "^|" + "~" + ")";
+
 
         Modifier modifier = new RegexModifier(regex, Pattern.MULTILINE, new SpaceSeparator(), 0 ,2048);
         Reader modifyingReader = new ModifyingReader(baseReader, modifier);
 
         String toTokenize = IOUtils.toString(modifyingReader);
-        List<String> tokens = new ArrayList<String>(Arrays.asList(toTokenize.split(" ")));
+        List<String> tokens = new ArrayList<>(Arrays.asList(toTokenize.split(" ")));
 
         tokens.removeAll(Collections.singletonList(""));
 
@@ -73,6 +87,9 @@ public class Parser {
                 tokens.set(i, replace + variableMap.get(tokens.get(i).trim()));
             }
 
+            if(this.quoteMap.get(tokens.get(i).trim()) != null) {
+                tokens.set(i, this.quoteMap.get(tokens.get(i).trim()));
+            }
         }
 
         String result = "";
@@ -89,6 +106,48 @@ public class Parser {
         return result;
     }
 
+    private String replaceQuotes(String input) throws FileNotFoundException {
+        Scanner scanner = new Scanner(input);
+        scanner.useDelimiter("\"");
+
+        // starts from first quote instead of start of file
+        if (scanner.hasNext()) {
+            scanner.next();
+        }
+
+        while(scanner.hasNext()) {
+            String quote = "\"" + scanner.next() + "\"";
+            String quoteName = generateQuoteName();
+            quoteMap.put(quoteName, quote);
+            input = input.replace(quote, quoteName);
+            if (scanner.hasNext()) {
+                scanner.next();
+            }
+        }
+        return input;
+    }
+
+    private String replaceSingleQuotes(String input) throws FileNotFoundException {
+        Scanner scanner = new Scanner(input);
+        scanner.useDelimiter("'");
+
+        // starts from first quote instead of start of file
+        if (scanner.hasNext()) {
+            scanner.next();
+        }
+
+        while(scanner.hasNext()) {
+            String quote = "'" + scanner.next() + "'";
+            String quoteName = generateQuoteName();
+            quoteMap.put(quoteName, quote);
+            input = input.replace(quote, quoteName);
+            if (scanner.hasNext()) {
+                scanner.next();
+            }
+        }
+        return input;
+    }
+
     private String returnTabsAndSpaces(List<String> tokens, int i) {
         String replace = "";
         for(int j = 0; j < tokens.get(i).length(); j++){
@@ -102,10 +161,18 @@ public class Parser {
         return replace;
     }
 
-    private int varCount = 0;
+    public String removeComments(String input, String regex) throws IOException{
+        Reader commentReader = new StringReader(input);
+        Modifier modifier = new RegexModifier(regex, Pattern.MULTILINE , new CommentSeparator(), 0 ,2048);
+        ModifyingReader modifyingReader = new ModifyingReader(commentReader, modifier);
+        return IOUtils.toString(modifyingReader);
+    }
 
     public String generateVarName() {
-        varCount++;
-        return "var" + varCount;
+        return "var" + System.nanoTime();
+    }
+
+    public String generateQuoteName() {
+        return "quote" + System.nanoTime();
     }
 }

@@ -26,6 +26,7 @@ public class App {
 	String targetLanguage;
 	String progLanguage;
 	boolean appFlag = true;
+	Boolean updateFlag;
 
 
 	// Get files to translate in the program.
@@ -54,6 +55,11 @@ public class App {
 		return (String) resn.get("programming language");
 	}
 
+	public Boolean getUpdate(Namespace resn) {
+		return (Boolean) resn.get("update");
+	}
+
+
 
 	/**
 	 * Get application wanted variables based on given arguments.
@@ -70,6 +76,7 @@ public class App {
 			targetLanguage =
 				this.getTargetLanguage(resn);
 			progLanguage = this.getProgLang(resn);
+			updateFlag = this.getUpdate(resn);
 			return true;
 		}
 		else {
