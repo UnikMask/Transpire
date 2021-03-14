@@ -1,7 +1,5 @@
 package Transpire;
 
-import java.io.File;
-
 import net.sourceforge.argparse4j.ArgumentParsers;
 import net.sourceforge.argparse4j.impl.Arguments;
 import net.sourceforge.argparse4j.inf.ArgumentParser;
@@ -25,13 +23,13 @@ public class Prompt
 			.required(true)
 			.dest("programming language")
 			.type(String.class)
-			.choices("python", "c")
+			.choices("python", "c", "java")
 			.help("The programming language used here.");
 		parserEng.addArgument("--source", "-s")
 			.required(true)
 			.dest("source language")
 			.type(String.class)
-			.choices("en", "fr")
+			.choices("en", "fr", "jp")
 			.help("The source file natural language.");
 		parserEng.addArgument("--target", "-t")
 			.dest("target language")
@@ -55,8 +53,7 @@ public class Prompt
 			.help("Whether the program should be verbose.");
 
 		try {
-			Namespace resn = parserEng.parseArgs(args);
-			return resn;
+			return parserEng.parseArgs(args);
 		}
 		catch (ArgumentParserException e) {
 			parserEng.handleError(e);

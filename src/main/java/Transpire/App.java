@@ -17,7 +17,6 @@ public class App {
         return "Transpire v.1.0.0";
     }
 
-
 	// App arguments - stored here for now
 	static Prompt promptInstance = new Prompt();
 	static App mainInstance_s;
@@ -108,7 +107,7 @@ public class App {
 		verboseLog("Reading content of " + progFile);
 		StringBuilder contentBuild = new StringBuilder();
 
-		try (BufferedReader br = new BufferedReader(new FileReader(new File(progFile)))) {
+		try (BufferedReader br = new BufferedReader(new FileReader(progFile))) {
 			String currline;
 			while ((currline = br.readLine()) != null) {
 				contentBuild.append(currline).append("\n");
@@ -149,27 +148,27 @@ public class App {
 		App mainInstance = new App(args);
 		mainInstance_s = mainInstance;
 		if (mainInstance.appFlag) {
-		Parser parser;
-		try{
-			Translations.updateTranslations(mainInstance.sourceLanguage,
-											mainInstance.progLanguage,
-											mainInstance.updateFlag);
-			parser = new Parser(mainInstance.sourceLanguage,
-								mainInstance.progLanguage);
+			Parser parser;
+			try{
+				Translations.updateTranslations(mainInstance.sourceLanguage,
+												mainInstance.progLanguage,
+												mainInstance.updateFlag);
+				parser = new Parser(mainInstance.sourceLanguage,
+									mainInstance.progLanguage);
 
-			// Get String from file
-			for (String file: mainInstance.sourceFiles) {
-				String output = parser.parseString(mainInstance.getFileContent(file));
-				if (!mainInstance.writeFile(output, file)){
-					System.out.println("Io Exception on file write!");
-					break;
+				// Get String from file
+				for (String file: mainInstance.sourceFiles) {
+					String output = parser.parseString(mainInstance.getFileContent(file));
+					if (!mainInstance.writeFile(output, file)){
+						System.out.println("Io Exception on file write!");
+						break;
+					}
 				}
+			}catch(NotSupportedLanguage e){
+				System.out.println(e.getMessage());
+			}catch(IOException e) {
+				System.out.println("Couldn't open file.");
 			}
-		}catch(NotSupportedLanguage e){
-			System.out.println(e.getMessage());
-		}catch(IOException e) {
-			System.out.println("Couldn't open file.");
-		}
 		}
     }
 }
