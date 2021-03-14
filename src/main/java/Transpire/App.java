@@ -24,40 +24,10 @@ public class App {
 	String sourceLanguage;
 	String targetLanguage;
 	String progLanguage;
+	String configDir;
 	boolean appFlag = true;
 	Boolean updateFlag;
 	Boolean verboseFlag;
-
-
-	// Get files to translate in the program.
-	public List<String> getFilesToTranslate(Namespace resn) {
-		List<String> resFiles = (List<String>) resn.get("files");
-		return resFiles;
-	}
-
-
-	// Get source language to translate from.
-	public String getSourceLanguage(Namespace resn) {
-			String resFiles = (String) resn.get("source language");
-			return resFiles;
-	}
-
-
-	// Get target language to translate to.
-	public String getTargetLanguage(Namespace resn) {
-		String resFiles = (String) resn.get("target language");
-		return resFiles;
-	}
-
-
-	// Get programming language to work on.
-	public String getProgLang(Namespace resn) {
-		return (String) resn.get("programming language");
-	}
-
-	public Boolean getUpdate(Namespace resn) {
-		return (Boolean) resn.get("update");
-	}
 
 
 	public static void verboseLog(String msg) {
@@ -75,15 +45,13 @@ public class App {
 	public boolean getArgsInApp(String[] args) {
 		Namespace resn = promptInstance.launchPrompt(args);
 		if (resn != null) {
-			sourceFiles =
-				this.getFilesToTranslate(resn);
-			sourceLanguage =
-				this.getSourceLanguage(resn);
-			targetLanguage =
-				this.getTargetLanguage(resn);
-			progLanguage = this.getProgLang(resn);
-			updateFlag = this.getUpdate(resn);
+			sourceFiles = (List<String>) resn.get("files");
+			sourceLanguage = (String) resn.get("source language");
+			targetLanguage = (String) resn.get("target language");
+			progLanguage = (String) resn.get("programming language");
+			updateFlag = (Boolean) resn.get("update");
 			verboseFlag = (Boolean) resn.get("verboseOut");
+			configDir = (String) resn.get("configDir");
 			return true;
 		}
 		else {
@@ -151,7 +119,8 @@ public class App {
 		if (mainInstance.appFlag) {
 			Parser parser;
 			try{
-				Translations.updateTranslations(mainInstance.sourceLanguage,
+				Translations.updateTranslations(mainInstance.configDir,
+												mainInstance.sourceLanguage,
 												mainInstance.progLanguage,
 												mainInstance.updateFlag);
 				parser = new Parser(mainInstance.sourceLanguage,
