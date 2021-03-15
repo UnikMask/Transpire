@@ -26,7 +26,7 @@ public class Translations {
 			App.verboseLog("Checking for translation...");
 			File translationFile = new File(configDir + "/" + sLang + "/" + pLang + ".json");
 			if (updateFlag || !translationFile.exists()) {
-				URL url = new URL("http://unikbase.space/translations/" + sLang + "/" + pLang + ".json");
+				URL url = new URL("http://trnpkgs.unikbase.space/translations/" + sLang + "/" + pLang + ".json");
 				App.verboseLog("Translation not present! Downloading it from " + url);
 				HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 				connection.setRequestMethod("GET");
